@@ -1,0 +1,53 @@
+.img-background {
+	/*background-size: cover;
+	height: 300px;
+	width: 100%;
+	z-index: -99; //z-index siempre debe ir acompañado de un position cualquiera. Se pueden usar valores negativos//
+	position: relative;*/
+	margin-top: 0px !important;
+}
+
+.link-color{
+	color:#BC955C;
+	display: flex;
+	justify-content: center;
+}
+/*
+.container-top{
+	margin-top: -300px;	
+}
+*/
+
+.modify-color{
+	color: #10312B;	
+}
+
+.container-form {
+	border: 2px solid #BC955C;
+	padding: 20px;
+	border-radius: 10px;
+}
+
+.btn-width{
+	width: 100%!important;
+}
+
+
+
+.alrt{
+	/*min-height:100%;*/
+	padding:10px 5px !important;
+	margin-bottom: 5px;
+}
+
+.alert-info-certificado{
+	/*margin-top:-6vh;
+	margin-bottom:25px;*/
+	text-align: justify;
+}
+
+.bnt-nvo-intento{
+	display:block; 
+	margin-left:auto; 
+	margin-right:auto;
+}

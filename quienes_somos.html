@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEP | SIGED</title>
+    <link href="https://framework-gb.cdn.gob.mx/gm/v3/assets/styles/main.css" rel="stylesheet">
+    <link href="https://framework-gb.cdn.gob.mx/gm/v3/assets/images/favicon.ico" rel="shortcut icon">
+    <link href="https://framework-gb.cdn.gob.mx/gm/accesibilidad/css/gobmx-accesibilidad.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/navbar-settings.css">
+    <!--link rel="stylesheet" type="text/css" href="css/alumnos.css"-->
+    <link rel="stylesheet" type="text/css" href="css/global_siged.css">
+    
+    <link href="css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+</head>    
+<body ng-app="student">
+ 
+    <div id="div-sub-navbar"></div>
+    <nav class="navbar navbar-expand-xl navbar-dark bg-light sub-navbar sub-navbar1 fixed-top navbar-top-siged" style="">
+        <div class="container sub-navbar1" bis_skin_checked="1">
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#subNavBarSIGED" aria-controls="subNavBarSIGED" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <a class="navbar-brand sub-navbar sub-navbar1" href="index.html">SIGED</a>
+      
+          <div class="sub-navbar1 collapse navbar-collapse" id="subNavBarSIGED" bis_skin_checked="1">
+            <ul class="navbar-nav sub-navbar1">
+              <li class="nav-item">
+                <a class="nav-link subnav-link" href="quienes_somos.html">¿Quiénes somos?</a>
+              </li>
+          <li class="nav-item">
+                <a class="nav-link subnav-link" href="index.html#consultas">Consultas</a>
+              </li>
+          <li class="nav-item">
+                <a class="nav-link subnav-link" href="estadistica_educativa.html">Estadística educativa</a>
+              </li>
+          <li class="nav-item">
+                <a class="nav-link subnav-link" href="indicadores_educativos.html">Indicadores educativos</a>
+              </li>
+          <li class="nav-item">
+                <a class="nav-link subnav-link" href="datos_abiertos.html">Datos abiertos</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link subnav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Aviso de Privacidad
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="aviso_simplificado.html">Simplificado</a></li>
+                <li><a class="dropdown-item" href="aviso_integral.html">Integral</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <div>
+        <img class="img-background" src="resource/image/bnr_alumnos.png">
+    </div>
+
+    <div class="container container-top" > 
+
+        <div class="row align-items-center">
+            <div class="column col-lg-8 hdr_title">
+                <h3>Sistema de Información y Gestión Educativa</h3>
+                <h2 class="mt-1">¿Quiénes somos?</h2>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="container bc_title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><a href="#">¿Quiénes somos?</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>  
+  
+        
+<div class="container">
+    <div class="row">
+        <div class="col-12 panel-group ficha-collapse" style="margin: auto" >
+            <div class="panel panel-default">
+                <div class="panel-heading" data-bs-toggle="collapse" href="#ConoceSIGED" role="button" aria-expanded="false" aria-controls="ConoceSIGED">
+                    <h4 class="panel-title"><a>Conoce el SIGED</a></h4>
+                    <button type="button" class="collpase-button collapsed" data-toggle="collapse" href="#ConoceSIGED"></button>
+                </div>             
+                <div class="panel-collapse collapse" id="ConoceSIGED">
+                    <div class="card card-body">
+                        <p>El Sistema de Información y Gestión Educativa (SIGED) es la estrategia articuladora de la Autoridad Educativa Federal para recabar, integrar, administrar, procesar y difundir la información en materia educativa, generada por el Sistema Educativo Nacional.<br>  
+                        A través del SIGED, puedes consultar información sobre el alumnado, docentes, escuelas y documentos electrónicos de certificación.  </p>
+                        <p class="titulo_texto">OBJETIVO GENERAL</p>
+                        <p><strong>•</strong>	Regular y/o proporcionar soluciones de automatización a las escuelas públicas de educación básica que permitan establecer: una comunicación directa entre los directores de las escuelas y las autoridades educativas, así como fortalecer la autonomía de gestión, reducir las cargas administrativas y resolver problemas básicos de las escuelas, entre otros. </p>
+                        <p><strong>•</strong>	Coadyuvar al fortalecimiento y la simplificación de trámites y procesos administrativos mediante el uso de registros electrónicos que se encuentren bajo el resguardo del SIGED y que facilitan la consulta y verificación de información.</p>
+                        <p><strong>•</strong>	Incorporar, crear, administrar y proveer información relevante y oportuna para la operación del SEN.</p>
+                    </div>
+                </div>
+            </div><!--br-->
+            <div class="panel panel-default" id="Servicios">
+                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabServicios" href="#TabServicios">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#TabServicios" aria-expanded="true" aria-controls="TabServicios" >Servicios de información</a>
+                    </h4>
+                    <button type="button" class="collpase-button collapsed" data-toggle="collapse" href="#TabServicios"></button>
+                </div>
+                <div class="panel-collapse collapse" id="TabServicios">
+                    <div class="card card-body">
+                        <p class="titulo_subtexto">Servicios de información</p>
+                        <ol class="bullet_siged">
+                            <li>Incorpora, administra y provee información relevante y oportuna para la operación del Sistema Educativo Nacional (SEN).</li>
+                            <li>Portal público con servicios de consulta de información respecto al alumnado, docentes, escuelas y documentos académicos oficiales (sitio web inclusivo con herramientas y controles que permiten la accesibilidad para algunas discapacidades).</li>
+                            <!--ul  class="bullet_siged"">
+                                <li>Alumnado de Educación Básica.</li>
+                                <li>Docentes y personal pagados a través del Fondo de Aportaciones para la Nómina Educativa y Gasto Operativo (FONE).</li>
+                                <li>Resultados del Servicio Profesional Docente (histórico) y de los procesos de la Unidad del Sistema para la Carrera de las Maestras y los Maestros (USICAMM).</li>	
+                                <li>Escuelas del Sistema Educativo Nacional (información estadística básica).</li>
+                                <li>Plazas vacantes asociadas a la escuela pagadas a través del FONE.</li>
+                                <li>Documentos académicos oficiales (certificados, certificaciones, revalidaciones y equivalencias) que se hayan emitido en el Módulo Electrónico de Certificación (MEC).</li>
+                                <li>Estadísticas de escuelas registradas en el Catálogo Nacional de Centros de Trabajo.</li>
+                                <li>Sistema Interactivo de Consulta de Estadística Educativa.</li>
+                                <li>Sistema Interactivo de Consulta de la información referente al Artículo 73 de la Ley General de Contabilidad Gubernamental.</li>
+                                <li>Sistema de descarga del Catálogo Nacional de Centros de Trabajo actualizado.</li>
+                            </ul-->
+                            <li>Portal interno, de uso exclusivo para autoridades educativas del SEN, que brinda herramientas de análisis de información para llevar a cabo su planeación, operación, administración y evaluación, facilitando la transparencia y rendición de cuentas.
+                            </li>
+                            <!--li>Portal interno (uso exclusivo para autoridades educativas)
+                                <ul class="bullet_siged">
+                                    <li>Sistema de Integración de Información Educativa (SIIE).</li>
+                                    <li>Acceso al Sistema de Captura del Formato 911.</li>
+                                    <li>Tableros analíticos de información educativa para las Autoridades Educativas.</li>
+                                    <ul class="bullet_siged">
+                                        <li>Estadística 911.</li>
+                                        <li>Centros de Trabajo.</li>
+                                        <li>Control Escolar.</li>
+                                        <li>Comparativo 911 y control escolar.</li>
+                                        <li>Nómina.</li>
+                                        <li>Comparativo 911 y FONE.</li>
+                                    </ul>
+                                </ul>
+                            </li-->   
+                            <li>Custodia y protege la confidencialidad y consistencia de la información integrada en la plataforma tecnológica de información, respecto de la identidad de los estudiantes, directivos, docentes, padres de familia o tutores y demás actores del SEN, con estricta observancia a los principios rectores de la protección de datos personales y normativa aplicable en la materia.</li>
+                        </ol><br>    
+                        <p class="titulo_subtexto">Servicios de gestión</p>
+                        <p>Coadyuva al fortalecimiento y la simplificación de trámites y procesos administrativos a los actores del SEN mediante el uso de registros electrónicos que se encuentren bajo el resguardo del SIGED y que facilitan la consulta y verificación de información.</p>   
+                     </div>
+                </div>
+            </div><!--br-->
+            <!--        -->
+            <div class="panel panel-default" id="Modelo">
+                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabModelo" href="#TabModelo">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#TabModelo" aria-expanded="true" aria-controls="TabModelo" >Modelo operativo del SIGED</a>
+                    </h4>
+                    <button type="button" class="collpase-button collapsed" data-toggle="collapse" href="#TabModelo"></button>
+                </div>
+                <div class="panel-collapse collapse" id="TabModelo">
+                    <div class="card card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <img style="margin-left: auto; margin-right: auto" class="img-responsive" src="resource/image/ModeloOperativo.png" alt="Modelo Operativo del SIGED" title="Modelo Operativo del SIGED">
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div><!--br-->
+            <!--
+            <div class="panel panel-default" id="Conformación">
+                <div class="panel-heading" data-toggle="collapse" href="#panel-15">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#panel-15" aria-expanded="true" aria-controls="panel-15" >Conformación del SIGED</a>
+                    </h4>
+                    <button type="button" class="collpase-button collapsed" data-toggle="collapse" href="#panel-15"></button>
+                </div>
+                <div class="panel-collapse collapse" id="panel-15">
+                    <div class="card card-body">
+                        <a href="#modal_conformacion" class="" data-toggle="modal">
+                            <img class="img-responsive" src="images/conformacion_SIGED.png" title="Conformación del SIGED" alt="Conformación del SIGED"></a>
+                    </div>
+                </div>
+            </div>
+            
+            -->
+            <!--br-->
+            <div class="panel panel-default" id="Términos">
+                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabServicios" href="#TabTerminos">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#TabTerminos" aria-expanded="true" aria-controls="TabTerminos" >Términos de uso</a>
+                    </h4>
+                    <button type="button" class="collpase-button collapsed" data-toggle="collapse" href="#TabTerminos"></button>
+                </div>
+                <div class="panel-collapse collapse" id="TabTerminos">
+                    <div class="card card-body">
+                        <p class="x_MsoNormal" align="justify">El uso del sitio del Sistema de Información y Gestión Educativa (SIGED) en Internet siged.sep.gob.mx o de cualquiera de sus componentes, implica la aceptación expresa de los siguientes términos.</p>
+                        <a href="#"><span class="bootstrap-icons" aria-hidden="true" onclick="window.location.href='terminos.html'"><strong><i class="bi bi-book"></i></strong> Consulta aquí</span></a>
+                    </div>
+                </div>
+            </div><br>
+            <!--        -->
+            <div class="panel panel-default" id="privacidad">
+                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabPrivacidad" href="#TabPrivacidad">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#TabPrivacidad" aria-expanded="true" aria-controls="TabPrivacidad" >Aviso de Privacidad</a>
+                    </h4>
+                    <button type="button" class="collpase-button collapsed" data-toggle="collapse" href="#TabPrivacidad"></button>
+                </div>
+                <div class="panel-collapse collapse" id="TabPrivacidad">
+                    <div class="card card-body" >
+                        <p>El SIGED, cuenta con un aviso de privacidad en el que hace de conocimiento que la información personal será recabada y utilizada para fines específicos; así como los propósitos del tratamiento al que serán sometidos sus datos personales.   Asimismo, se da a conocer el procedimiento para ejercer los derechos de Acceso, Rectificación, Cancelación y Oposición la forma de ejercerlos (Derechos ARCO). Puedes consultarlo aquí:</p>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 center_siged">
+                              <button class="btn btn-danger btn-lg btn_siged" type="button" onclick="window.location.href='aviso_simplificado.html'" data-mdb-ripple-init >Aviso de privacidad Simplificado</button>
+                              <button class="btn btn-secondary btn-lg btn_siged" type="button" onclick="window.location.href='aviso_integral.html'"  data-mdb-ripple-init>Aviso de privacidad Integral</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--br-->
+            <div class="panel panel-default" id="contacto">
+                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabContacto" href="#TabContacto">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#TabContacto" aria-expanded="true" aria-controls="TabContacto" >Información de contacto</a>
+                    </h4>
+                    <button type="button" class="collpase-button collapsed" data-toggle="collapse" href="#TabContacto"></button>
+                </div>
+                <div class="panel-collapse collapse" id="TabContacto">
+                    <div class="card card-body">
+                        <div class="row" style="margin-bottom: 0%">
+                          <div class="col-lg-4 col-md-4 col-xs-12">
+                              <address>Av. Universidad 1200, <br>Col. Xoco, Alcaldía Benito Juárez, <br>Ciudad de México. C.P. 03330<br><br>Teléfono: (55) 3600 2511 <br><br>Horario de Atención de 9:00 a 17:00 horas.<br><br><p style="font-weight: 500">Dirección General de Planeación, Programación y Estadística Educativa (DGPPyEE)</p><br><br><p style="font-weight: 800">Secretaría de Educación Pública</p><br><br><input name="organization[latitude]" type="hidden" value="19.3627623"><input name="organization[longitude]" type="hidden" value="-99.1744389"></address>
+                            <!--div>
+                                <a href="http://www.siged.sep.gob.mx/" class="sendEst">
+                                  <h4>Sitio web</h4>
+                                </a>
+                            </div-->
+                        </div>
+                          <div class="col-lg-8 col-md-8 col-xs-12">
+                               <div class='form-control small-bottom-buffer' id='googleMap' style='width:100%;height:440px;'><iframe style='width: 100%; height: 426px;' src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3764.1646875504366!2d-99.17098388509442!3d19.36202048692443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff954448d6c7%3A0x9890bb16106aa670!2sAv.+Universidad+1200%2C+Xoco%2C+03330+Ciudad+de+M%C3%A9xico%2C+CDMX!5e0!3m2!1ses!2smx!4v1522865365326" frameborder="0" style="border:0" allowfullscreen></iframe></div>
+                          </div>
+                            <div class="col-md-12">
+                                <label class="alert" style="background-color: #eee; margin: auto; display: block; text-align: right;">
+                                    <p>Mesa de Ayuda SIGED: <a href="mailto:mesadeayudasiged@nube.sep.gob.mx">mesadeayudasiged@nube.sep.gob.mx</a><br> 
+                                    Tel. 55 3600 25 11 extensiones: 54101, 54950, 54951 y 54953<br>Horarios de atenci&oacute;n: Lunes a viernes de 09:00 a 17:00 hrs.</p></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--br-->            
+            <div class="panel panel-default" id="interes" >
+                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabInteres" href="#TabInteres">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#TabInteres" aria-expanded="true" aria-controls="TabInteres" >Información de interés</a>
+                    </h4>
+                    <button type="button" class="collpase-button collapsed" data-parent="#accordion2"
+                data-toggle="collapse" href="#TabInteres"></button>
+                </div>
+                <div class="panel-collapse collapse" id="TabInteres">
+                    <div class="card card-body">
+                        <div class="panel panel-default" id="glosario" >
+                            <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabGlosario" href="#TabGlosario">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#TabGlosario" aria-expanded="true" aria-controls="TabGlosario" >Glosario de términos educativos</a>
+                                </h4>
+                                <button type="button" class="collpase-button collapsed" data-parent="#accordion2"
+                data-toggle="collapse" href="#TabGlosario"></button>
+                            </div>
+                            <div id="TabGlosario" class="panel-collapse collapse">
+                                <div class="card card-body semblanza-direccion">
+                                    <div class="col-md-12 col-lg-12 table-responsive">
+                                        <p class="x_MsoNormal" align="justify">En este glosario conoce las definiciones sobre conceptos y términos educativos, que te ayudarán a enriquecer y aclarar los términos que se utilizan en el sitio.</p>
+                                        <a href="#"><span class="bootstrap-icons" aria-hidden="true" onclick="window.location.href='glosario.html'"><strong><i class="bi bi-book"></i></strong> Consulta aquí</span></a> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                        <div class="panel panel-default" id="lineamientos">
+                            <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabLineamientos" href="#TabLineamientos">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#TabLineamientos" aria-expanded="true" aria-controls="TabLineamientos" >Lineamientos para la formulación de indicadores (septiembre 2019)</a>
+                                </h4>
+                                <button type="button" class="collpase-button collapsed" data-parent="#accordion2"
+                data-toggle="collapse" href="#TabLineamientos"></button>
+                            </div>
+                            <div id="TabLineamientos" class="panel-collapse collapse">
+                                <div class="card card-body semblanza-direccion">
+                                    <div class="col-md-12 col-lg-12 table-responsive">
+                                        <p class="x_MsoNormal" align="justify">Se ponen a disposición los lineamientos para la formulación de indicadores educativos, el cual integra su definición, el proceso para su integración, cómo se representa y para qué sirve. </p>
+                                        <a href="#"><span class="bootstrap-icons" aria-hidden="true" onclick="myFunction2();"><strong><i class="bi bi-arrow-down-circle"></i></strong> Descarga aquí</span></a> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                        <div class="panel panel-default" id="manuales_analiticos">
+                            <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabMAnaliticos" href="#TabMAnaliticos">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#TabMAnaliticos" aria-expanded="true" aria-controls="TabMAnaliticos" >Manuales Analíticos del SIGED</a>
+                                </h4>
+                                <button type="button" class="collpase-button collapsed" data-toggle="collapse" href="#TabMAnaliticos"></button>
+                            </div>
+                            <div id="TabMAnaliticos" class="panel-collapse collapse">
+                                <div class="card card-body semblanza-direccion">
+                                    <div class="col-md-12 col-lg-12 table-responsive">
+                                        <p class="x_MsoNormal" align="justify">Con el propósito de facilitar el uso de esta herramienta, en la que las Autoridades Educativas pueden acceder a tableros analíticos para realizar análisis de datos en un contexto territorial y temporal, además de la posibilidad de comparar resultados en el tiempo, aportando elementos para la toma de decisiones y fortaleciendo los procesos de transparencia y rendición de cuentas; se ponen a disposición los siguientes manuales de usuario. </p>
+                                    <ul>
+                                        <li class="bullet_siged"><a href="archivos/MA/Manual_de_usuario_911.pdf" download="Manual de usuario 911">Manual de usuario 911</a></li>
+                                        <li class="bullet_siged"><a href="archivos/MA/Manual_de_usuario_911%20vs%20CE.pdf" download="Manual_de_usuario_911_VS_CE">Manual de usuario 911 vs CE</a></li>
+                                        <li class="bullet_siged"><a href="archivos/MA/Manual%20de%20Usuario%20Becas.pdf" download="Manual_de_usuario_Becas">Manual de usuario Becas</a></li>
+                                        <li class="bullet_siged"><a href="archivos/MA/Manual_de_usuario_CE.pdf" download="Manual_de_usuario_CE">Manual de usuario CE</a></li>
+                                        <li class="bullet_siged"><a href="archivos/MA/Manual_de_usuario_CT.pdf" download="Manual_de_usuario_CT">Manual de usuario CT</a></li>
+                                        <li class="bullet_siged"><a href="archivos/MA/Manual_de_usuario_FONE%20vs%20911.pdf" download="Manual_de_usuario_FONE_vs_911">Manual de usuario FONE vs 911</a></li>
+                                        <li class="bullet_siged"><a href="archivos/MA/Manual_de_usuario_Nomina.pdf" download="Manual_de_usuario_Nomina">Manual de usuario Nomina</a></li>
+                                    </ul>        
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                        <div class="panel panel-default" id="nomina_estatal">
+                            <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabNE" href="#TabNE">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#TabNE" aria-expanded="true" aria-controls="TabNE">Campaña de Nómina Estatal</a>
+                                </h4>
+                                <button type="button" class="collpase-button collapsed" data-parent="#accordion2"
+                data-toggle="collapse" href="#TabNE"></button>
+                            </div>
+                            <div id="TabNE" class="panel-collapse collapse">
+                                <div class="card card-body semblanza-direccion">
+                                    <div class="col-md-12 col-lg-12 table-responsive">
+                                        <p class="x_MsoNormal" align="justify">Consulta información importante para el proceso de actualización e integración de información al SIGED, sobre los movimientos de personal docente, técnico docente, asesor técnico pedagógico, personal con funciones de dirección y de supervisión, así como del personal de apoyo y asistencia a la educación en activo; correspondientes a educación básica con pago estatal, y con identificación del Centro de Trabajo en el que prestan sus servicios. </p>
+                                        <a href="#"><span class="bootstrap-icons" aria-hidden="true" onclick="window.location.href='calendarioTransferenciaNE.html'"><strong><i class="bi bi-calendar"></i></strong> Consulta aquí</span></a> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                        <!-- Indicadores de cumplimiento-->
+                        <div class="panel panel-default" id="indicadores" ng-init=" inicializarIndex()" ng-controller="searchReferenceCtrl">
+                            <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabIndicadores" href="#TabIndicadores" title="Consulta las métricas actualizadas de los avances en la transferencia de información al SIGED.">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#TabIndicadores" aria-expanded="true" aria-controls="TabIndicadores" >Indicadores de cumplimiento de la integración y actualización de información al SIGED</a>
+                                </h4>
+                                <button type="button" class="collpase-button collapsed" data-toggle="collapse" href="#TabIndicadores"></button>
+                            </div>
+                            <div id="TabIndicadores" class="panel-collapse collapse">
+                                <div class="card card-body semblanza-direccion">
+                                    <div class="col-md-12 col-lg-12" >
+                                        <!--id="tblDescargas"-->
+                                        <table border="1" class="table table-siged table-select table-siged table-select table-striped table-bordered" id="tblDescargasIndicadores" style="width:100%;" type="button" onclick="function();">
+                                            <thead class="header-order">
+                                                <tr>
+                                                    <th class="col-md-6" title="Descripción">Descripción</th>
+                                                    <th class="col-md-3" title="Fecha de actualización">Fecha de actualización</th>
+                                                    <th class="col-md-3" title="Descarga">Descarga</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--br-->
+            <div class="panel panel-default" id="directorio">
+                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabDirectorio" href="#TabDirectorio" title="Identifica a los enlaces estatales del SIGED." >
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#TabDirectorio" aria-expanded="true" aria-controls="TabDirectorio" >Directorio de enlaces Estados/SEP</a>
+                    </h4>
+                    <button type="button" class="collpase-button collapsed" data-parent="#accordion2"
+                data-toggle="collapse" href="#TabDirectorio"></button>
+                </div>
+                <div class="panel-collapse collapse" id="TabDirectorio">
+                    <div class="card card-body">
+                        <!--id="tblEnlaces"-->
+                        <table border="1" class="table table-siged table-select table-siged table-select table-striped table-bordered nowrap tableWithDataSet" id="tblEnlaces">
+                            <thead class="header-order">
+                                <tr class="col-ms-12">
+                                    <th class="col-md-2" title="Entidad">Entidad</th>
+                                    <th class="col-md-2" title="Rol SIGED">Rol SIGED</th>
+                                    <th class="col-md-3" title="Nombre">Nombre</th>
+                                    <th class="col-md-3" title="Puesto">Puesto</th>
+                                    <th class="col-md-2" title="Fecha de Actualización">Fecha de Actualización</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!--br-->
+            <div class="panel panel-default" id="marco_normativo">
+                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabMarco" href="#TabMarco">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#TabMarco" aria-expanded="true" aria-controls="TabMarco" >Marco Normativo</a>
+                    </h4>
+                    <button type="button" class="collpase-button collapsed" data-parent="#accordion2"
+                data-toggle="collapse" href="#TabMarco"></button>
+                </div>
+                <div id="TabMarco" class="panel-collapse collapse">
+                    <div class="card card-body semblanza-direccion">
+                        <div class="col-md-12 col-lg-12 table-responsive">
+                            <p class="x_MsoNormal" align="justify">El marco normativo aplicable a las acciones realizadas durante la ejecución de este proyecto está motivado y fundamentado por el cuerpo normativo. </p>
+                            <a href="#"><span class="bootstrap-icons" aria-hidden="true" onclick="window.location.href='marco_normativo.html'"><strong><i class="bi bi-card-text"></i></strong> Consulta aquí</span></a> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+        </div>
+    </div>
+</div>  
+</main>
+
+    
+<!--script src="js/jquery.min.js"></script-->
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="js/jquery.dataTables.js"></script>
+    
+<script type="text/javascript" src="js/datatables/jquery.dataTables.min.js"></script>
+<!--script type="text/javascript" src="js/datatables/dataTables.bootstrap.min.js"></script-->
+<script type="text/javascript" src="js/dataTables.responsive.js"></script>
+
+<script src="js/angular.js" data-semver="1.5.8"></script>
+<script src="js/angular-resource.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+      $("#div-sub-navbar").load("sub-navbar_siged.html");
+    });
+</script> 
+<script>
+    function myFunction2() {
+        window.open("https://www.planeacion.sep.gob.mx/Doc/estadistica_e_indicadores/lineamientos_formulacion_de_indicadores.pdf", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=800,left=600,width=800,height=600");
+    }
+</script>
+</body>
+
+<!--    INI Ventanas Modales    --> 
+<!--    Modal Enlaces          --> 
+<div class="modal fade" id="modal_datos_enlaces" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-init=" inicializarIndex()" ng-controller="searchReferenceCtrl" tabindex="1">
+  <div id="dialog_enlaces" class="modal-dialog modal-lg" >
+    <div class="modal-content">
+      <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Información adicional</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: whitesmoke">×</button>
+      </div>
+      <div class="modal-body modal-contacto" id="modal-body">
+        <!--    Pestañas    -->
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-link active" id="home-tab" data-toggle="tab" role="tab" aria-controls="nav-01" aria-selected="true">Contacto</a>
+
+          </div>
+          <div class="tab-content" id="nav-tabContent" style="padding-top:0; " >
+                <div class="tab-pane fade show active" id="homeModalEnlace" role="tabpanel" aria-labelledby="nav-tab-01">
+                    <!--  CONTENIDO   -->
+                    <div id="cont_escuela" class="row"> 
+                        <br />
+                        <table border="1" class="table table-siged table-select table-striped table-bordered" 
+                        id="" style="width:100%; margin-bottom: -30px" >
+                            <tbody>
+                                <tr>
+                                <th title="Entidad:">Entidad:</th>
+                                <th scope="row"><b><span ng-bind="detailContact.entidad"></span></b><br /><br /></th>
+                                </tr>
+                                <tr>
+                                <th scope="row" title="Rol SIGED">Rol SIGED:</th>
+                                <th><b>{{(detailContact.rolSiged)}}</b><br /><br /></th>
+                                </tr>
+                                <tr>
+                                <th scope="row" title="Nombre">Nombre:</th>
+                                <th><b>{{(detailContact.nombre)}}</b><br /><br /></th>
+                                </tr>
+                                <tr>
+                                <th scope="row" title="Puesto">Puesto:</th>
+                                <th><b>{{(detailContact.puesto)}}</b><br /><br /></th>
+                                </tr>
+                                <tr>
+                                <th scope="row" title="Email">Email:</th>
+                                <th><b>{{(detailContact.email)}}</b><br /><br /></th>
+                                </tr>
+                                <tr>
+                                <th scope="row" title="Teléfono">Teléfono:</th>
+                                <th><b>{{(detailContact.telefono)}}</b><br /><br /></th>
+                                </tr>
+                                <tr>
+                                <th scope="row" title="Dirección">Dirección:</th>
+                                <th><b>{{(detailContact.direccion)}}</b><br /><br /></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- FIN CONTENIDO  -->    
+                </div>
+            </div>
+          <!-- End Pestañas -->
+          </div>
+
+      <div class="modal-footer" >
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--    Fin Modal Enlaces          -->    
+    
+<!--main id="modal_conf" -->
+    <div class="modal fade" id="modal_conformacion" >
+        <div class="modal-dialog modal-lg" style="width: 90%; height: 100%">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h4 class="modal-title" title="Conformación del SIGED">Conformación del SIGED</h4>
+                </div>
+                <div class="modal-body" style="width: 90%">
+                    <img class="img-responsive" src="resource/image/conformacion_SIGED.png" alt="" >
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" title="Cerrar">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--/main-->
+    
+    
+    
+    
+<!--    END Ventanas Modales    -->      
+    
+<script src="js/alumnos.js"></script>
+    
+<script src="js/tablas_siged.js"></script>
+<script src="js/uri.js"></script>
+<script src="js/save.js"></script>    
+
+<script src="https://framework-gb.cdn.gob.mx/gm/v3/assets/js/gobmx.js"></script>
+<script src="https://framework-gb.cdn.gob.mx/gm/accesibilidad/js/gobmx-accesibilidad.min.js"></script>
+    
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-83445936-1', 'auto');
+    ga('send', 'pageview');
+
+    $(function () {
+
+        // Setup - add a text input to each footer cell
+        $('#enlaces thead td').each(function () {
+            var title = $(this).text();
+            $(this).html('<input style="font-size: 14px; font-weight: normal;" type="text" placeholder="Buscar ' + title + '" />');
+        });
+
+        // DataTable
+        var table = $('#enlaces').DataTable({
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por p&aacute;gina.",
+                "zeroRecords": "No se encontraron registros.",
+                "info": " ",
+                "infoEmpty": "No hay registros a&uacute;n.",
+                "infoFiltered": "(filtrados de un total de _MAX_ registros)",
+                "search": "B&uacute;squeda",
+                "LoadingRecords": "Cargando ...",
+                "Processing": "Procesando...",
+                "SearchPlaceholder": "Comience a teclear...",
+                "iDisplayLength": 20,
+                "sPaginationType": "full_numbers",
+                "sServerMethod": "POST",
+                "aLengthMenu": [[10, 15, 20, -1], [10, 15, 20, "All"]],
+                "iDisplayLength": 20,
+                "paginate": {
+                    "previous": "Anterior",
+                    "next": "Siguiente"
+                }
+            }, responsive: true,
+            "order": false
+        });
+
+        // Apply the search
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.header()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+    });
+</script>
+    
+<script>
+function myFunctionModal(contacto) {
+
+    $("#modal_datos_enlaces").modal('show');
+}
+</script>
+
+   
+</html>

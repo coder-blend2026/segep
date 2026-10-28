@@ -1,0 +1,7 @@
+# Configuración para procesar archivos .php
+<FilesMatch "\.(php)$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+
+# Opcional: Asegurar que index.php sea el archivo por defecto
+DirectoryIndex index.php index.html

@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="es-MX">
+    
+<!-- Mirrored from siged.sep.gob.mx/SIGED/datos_abiertos.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:23:36 GMT -->
+<head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SEP | SIGED</title>
+        <link href="../../framework-gb.cdn.gob.mx/gm/v3/assets/styles/main.css" rel="stylesheet" />
+        <link href="https://framework-gb.cdn.gob.mx/gm/v3/assets/images/favicon.ico" rel="shortcut icon" />
+        <link
+            href="../../framework-gb.cdn.gob.mx/gm/accesibilidad/css/gobmx-accesibilidad.min.css"
+            rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="css/navbar-settings.css" />
+        <link rel="stylesheet" type="text/css" href="css/global_siged.css" />
+
+        <link href="css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body ng-app="student">
+        <div id="div-sub-navbar"></div>
+
+        <div>
+            <img class="img-background" src="images/bnr_alumnos.html" />
+        </div>
+
+        <div class="container container-top">
+            <div class="row align-items-center">
+                <div class="column col-lg-8 hdr_title">
+                    <h3>Sistema de Información y Gestión Educativa</h3>
+                    <h2 class="mt-1">Datos abiertos</h2>
+                </div>
+                <!--div class="column col-lg-4 mt-lg-3">
+                <div class="card card-center">
+                  <div class="card-body">
+                    <h5 class="card-title mt-1">Ciclo Escolar <span ng-bind="cifraAnualPeriodo"></span></h5>
+                    <h4 class="card-subtitle mt-3"><span ng-bind="cifraAnualAlumnosGlobales"></span></h4>
+                    <p class="card-text mt-2">Alumnas y alumnos de educación básica<span ng-if="cifraAnualPreliminar == 1">*</span>.</p>
+                    <hr class="mt-1 mb-1">
+                    <p class="card-fuente-info">Fuente: Sistema de Estadísticas Continuas de Educación del Formato 911, DGPPyEE, SEP.</p>
+                    <p class="card-fuente-info"><span ng-if="cifraAnualPreliminar == 1">*Cifras preliminares</span></p>
+                  </div>
+                </div>              
+            </div-->
+            </div>
+        </div>
+
+        <main>
+            <div class="container bc_title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index-2.html">Inicio</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a href="#">Datos abiertos</a></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <section id="descripcion">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!--p class="titulo_texto">Estadística educativa</p>
+                	<hr class="red"-->
+                            <p>
+                                El SIGED, cumpliendo con la Política de Transparencia, Gobierno Abierto y Datos Abiertos
+                                de la Administración Pública Federal 2021-2024, y con la finalidad de incrementar la
+                                transparencia y rendición de cuentas pone a tu disposición en formato abierto la
+                                siguiente información:
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="content" ng-init=" inicializarIndex()" ng-controller="searchReferenceCtrl">
+                <div class="container">
+                    <div class="row">
+                        <!--div class="col-12 col-md-8 panel-group ficha-collapse" id="accordion1" style="margin: auto" -->
+                        <div class="col-11 col-md-11 panel-group ficha-collapse" id="accordion1" style="margin: auto">
+                            <div class="panel panel-default" id="DatosAbiertos">
+                                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabDatAbi" href="#TabDatAbi">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#TabDatAbi" aria-expanded="true"
+                                            aria-controls="TabDatAbi"
+                                            >Datos abiertos de alumnado, docentes y escuelas (Formato 911)
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse collapse" id="TabDatAbi">
+                                    <div class="panel-body">
+                                        <p align="justify">
+                                            Consulta información de las variables que integran el Formato 911. Incluye
+                                            un diccionario para familiarizarse con los términos.
+                                        </p>
+                                        <div class="col-md-12 col-lg-12 table-responsive">
+                                            <!--id="tblDescargasInfo911"-->
+                                            <table
+                                                border="1"
+                                                class="table table-siged table-select table-siged table-select table-responsive table-striped table-bordered tableWithDataSet"
+                                                id="tblDescargasInfo911"
+                                                style="width: 100%"
+                                                type="button">
+                                                <thead class="header-order">
+                                                    <tr>
+                                                        <th class="col-md-5 col-lg-5" title="Descripción">
+                                                            Descripción
+                                                        </th>
+                                                        <th class="col-md-3 col-lg-3" title="Fecha de Actualización">
+                                                            Fecha de Actualización
+                                                        </th>
+                                                        <th class="col-md-5 col-lg-5" title="Descarga">Descarga</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                            <!--table border="1" class="table table-siged table-select table-siged table-select table-responsive table-striped table-bordered tableWithDataSet" id="tblDescargasInfo911" style="width:100vw" type="button"  >
+                                <thead class="header-order">
+                                    <tr>
+                                        <th title="Descripción">Descripción</th>
+                                        <th title="Fecha de Actualización">Fecha de Actualización</th>
+                                        <th title="Descarga">Descarga</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="panel panel-default" id="INIFED">
+                                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabINIFED" href="#TabINIFED">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#TabINIFED" aria-expanded="true" aria-controls="TabINIFED">Información de Infraestructura Física Educativa (INIFED 2013-2018)</a
+                                        >
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse collapse" id="TabINIFED">
+                                    <div class="panel-body">
+                                        <p align="justify">
+                                            Consulta información del Instituto Nacional de la Infraestructura Física
+                                            Educativa (INIFED) sobre construcción, equipamiento, mantenimiento,
+                                            rehabilitación e instalaciones destinadas a la educación pública.
+                                        </p>
+                                        <div class="col-md-12 col-lg-12 table-responsive">
+                                            <!--id="tblDescargasHistorico"-->
+                                            <table
+                                                border="1"
+                                                class="table table-siged table-select table-siged table-select table-responsive table-striped table-bordered tableWithDataSet"
+                                                id="tblDescargasHistorico"
+                                                style="width: 100%"
+                                                type="button">
+                                                <thead class="header-order">
+                                                    <tr>
+                                                        <th class="col-md-6" title="Descripción">Descripción</th>
+                                                        <th class="col-md-3" title="Fecha de Actualización">
+                                                            Fecha de Actualización
+                                                        </th>
+                                                        <th class="col-md-3" title="Descarga">Descarga</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="panel panel-default" id="CatalogoCCT">
+                                <div class="panel-heading" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="TabCatCCT" href="#TabCatCCT" onclick="function();">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#TabCatCCT" aria-expanded="true" aria-controls="TabCatCCT">Descarga del Catálogo de Centros de Trabajo</a
+                                        >
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse collapse" id="TabCatCCT">
+                                    <div class="panel-body">
+                                        <p align="justify">
+                                            Conoce información que forma parte del Catálogo de Centros de Trabajo que
+                                            son normados por la Secretaría de Educación Pública, así como los servicios
+                                            que otorgan.
+                                        </p>
+                                        <div class="col-md-12 col-lg-12">
+                                            <!--id="tblDescargas"-->
+                                            <table
+                                                border="1"
+                                                class="table table-siged table-select table-siged table-select table-responsive table-striped table-bordered tableWithDataSet"
+                                                id="tblDescargas"
+                                                style="width: 100%"
+                                                type="button">
+                                                <thead class="header-order">
+                                                    <tr>
+                                                        <th class="col-md-6" title="Descripción">Descripción</th>
+                                                        <th class="col-md-3" title="Fecha de Actualización">
+                                                            Fecha de Actualización
+                                                        </th>
+                                                        <th class="col-md-3" title="Descarga">Descarga</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+
+                            <br /><br />
+                        </div>
+                        <!--div class="col-md-4" style="text-align: center">    
+            <img src="images/bnr_siged_02.png" class="bnr_siged image_fluid">
+            <h5>Datos Abiertos</h5>
+            <br><br>
+        </div-->
+                        <!--div class="col-md-4" style="text-align: center">    
+            <img src="" width="100%" height="200px">
+            <p >Indicadores educativos</p>
+            <br><br>
+        </div-->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!--script src="js/jquery.min.js"></script-->
+        <script src="js/jquery-3.5.1.min.html"></script>
+        <script src="../../cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+        <script type="text/javascript" src="js/datatables/jquery.dataTables.min.html"></script>
+        <!--script type="text/javascript" src="js/datatables/dataTables.bootstrap.min.js"></script-->
+        <script type="text/javascript" src="js/dataTables.responsive.html"></script>
+
+        <script src="js/angular.html" data-semver="1.5.8"></script>
+        <script src="js/angular-resource.html"></script>
+
+        <script type="text/javascript">
+            $(function () {
+                $("#div-sub-navbar").load("sub-navbar_siged.html");
+            });
+        </script>
+
+        <script>
+            function myFunctionModal(contacto) {
+                $("#modal_datos_enlaces").modal("show");
+            }
+        </script>
+    </body>
+
+    <script src="js/alumnos.html"></script>
+
+    <script src="js/tablas_siged.html"></script>
+    <script src="js/uri.html"></script>
+    <script src="js/save.html"></script>
+
+    <script src="../../framework-gb.cdn.gob.mx/gm/v3/assets/js/gobmx.js"></script>
+    <script src="../../framework-gb.cdn.gob.mx/gm/accesibilidad/js/gobmx-accesibilidad.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i["GoogleAnalyticsObject"] = r;
+            (i[r] =
+                i[r] ||
+                function () {
+                    (i[r].q = i[r].q || []).push(arguments);
+                }),
+                (i[r].l = 1 * new Date());
+            (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m);
+        })(window, document, "script", "../../www.google-analytics.com/analytics.js", "ga");
+
+        ga("create", "UA-83445936-1", "auto");
+        ga("send", "pageview");
+
+        $(function () {
+            // Setup - add a text input to each footer cell
+            $("#enlaces thead td").each(function () {
+                var title = $(this).text();
+                $(this).html(
+                    '<input style="font-size: 14px; font-weight: normal;" type="text" placeholder="Buscar ' +
+                        title +
+                        '" />'
+                );
+            });
+
+            // DataTable
+            var table = $("#enlaces").DataTable({
+                language: {
+                    lengthMenu: "Mostrar _MENU_ registros por p&aacute;gina.",
+                    zeroRecords: "No se encontraron registros.",
+                    info: " ",
+                    infoEmpty: "No hay registros a&uacute;n.",
+                    infoFiltered: "(filtrados de un total de _MAX_ registros)",
+                    search: "B&uacute;squeda",
+                    LoadingRecords: "Cargando ...",
+                    Processing: "Procesando...",
+                    SearchPlaceholder: "Comience a teclear...",
+                    iDisplayLength: 20,
+                    sPaginationType: "full_numbers",
+                    sServerMethod: "POST",
+                    aLengthMenu: [
+                        [10, 15, 20, -1],
+                        [10, 15, 20, "All"]
+                    ],
+                    iDisplayLength: 20,
+                    paginate: {
+                        previous: "Anterior",
+                        next: "Siguiente"
+                    }
+                },
+                responsive: true,
+                order: false
+            });
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $("input", this.header()).on("keyup change", function () {
+                    if (that.search() !== this.value) {
+                        that.search(this.value).draw();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function myFunctionModal(contacto) {
+            $("#modal_datos_enlaces").modal("show");
+        }
+    </script>
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/datos_abiertos.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:23:38 GMT -->
+</html>

@@ -1,0 +1,572 @@
+.title-calendar{
+    text-align : justify;
+    font-size: 16px;
+}
+
+.letter-calendar{
+    text-align : justify;
+    font-size: 12px
+}
+
+span.color1-calendar{
+    background-color:  #aab6b0;
+    color: #aab6b0;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color2-calendar{
+    background-color:  #edecea;
+    color: #edecea;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color3-calendar{
+    background-color:  #176e99;
+    color: #176e99;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color4-calendar{
+    background-color:  #d0ac44;
+    color: #d0ac44;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color5-calendar{
+    background-color:  #080909;
+    color: #080909;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color6-calendar{
+    background-color:  #cd3bd5;
+    color: #cd3bd5;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color7-calendar{
+    background-color:  #9c2646;
+    color: #9c2646;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color8-calendar{
+    background-color:  #dcdedd;
+    color: #dcdedd;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color9-calendar{
+    background-color:  #828f8c;
+    color: #828f8c;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color10-calendar{
+    background-color:  #aab6b0;
+    color: #aab6b0;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color11-calendar{
+    background-color:  #62dad4;
+    color: #62dad4;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color12-calendar{
+    background-color:  #bf4278;
+    color: #bf4278;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color13-calendar{
+    background-color:  #da9662;
+    color: #da9662;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color17-calendar{
+    background-color:  #8fc646;
+    color: #8fc646;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color18-calendar{
+    background-color:  #f7fb0e;
+    color: #f7fb0e;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color19-calendar{
+    background-color:  #ddc0c2;
+    color: #ddc0c2;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color20-calendar{
+    background-color:  #f4ee00;
+    color: #f4ee00;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color21-calendar{
+    background-color:  #3998da;
+    color: #3998da;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color22-calendar{
+    background-color:  #fd8964;
+    color: #fd8964;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color23-calendar{
+    background-color:  #c09c22;
+    color: #c09c22;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color24-calendar{
+    background-color:  #07a8dc;
+    color: #07a8dc;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color25-calendar{
+    background-color:  #1a1a1a;
+    color: #1a1a1a;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color26-calendar{
+    background-color:  #f36f7d;
+    color: #f36f7d;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color27-calendar{
+    background-color:  #00af4f;
+    color: #00af4f;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color28-calendar{
+    background-color:  #c0231e;
+    color: #c0231e;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color29-calendar{
+    background-color:  #1a1b0b;
+    color: #1a1b0b;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color30-calendar{
+    background-color:  #040404;
+    color: #040404;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color31-calendar{
+    background-color:  #a0a0a0;
+    color: #a0a0a0;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color32-calendar{
+    background-color:  #1a1b0b;
+    color: #1a1b0b;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+ 
+span.color33-calendar{
+    background-color:  #1D1D1B;
+    color: #1D1D1B;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color34-calendar{
+    background-color:  #F3CB1F;
+    color: #F3CB1F;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color35-calendar{
+    background-color:  #0D5B4D;
+    color: #0D5B4D;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color36-calendar{
+    background-color:  #C8CDD1;
+    color: #C8CDD1;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color37-calendar{
+    background-color:  #AD3F60;
+    color: #AD3F60;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color38-calendar{
+    background-color:  #BC955C;
+    color: #BC955C;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color39-calendar{
+    background-color:  #DEC8A1;
+    color: #DEC8A1;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color40-calendar{
+    background-color:  #46BEE1;
+    color: #46BEE1;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color41-calendar{
+    background-color:  #A12245;
+    color: #A12245;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+span.color42-calendar{
+    background-color:  #E1A1BF;
+    color: #E1A1BF;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    margin-right: 15px;
+    text-align: center;
+    width: 1.2em; 
+}
+
+  #calendar {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 12px;
+  }
+
+  #calendar2 {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 12px;
+  }
+
+  .fc-title{
+    color: #FFF!important;
+  }
+

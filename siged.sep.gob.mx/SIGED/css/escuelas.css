@@ -1,0 +1,148 @@
+.img-background {
+	margin-top: 0px !important;
+}
+
+.container-top{
+	margin-top: -250px;
+}
+
+.modify-color{
+	color: #10312B;	
+}
+
+.card {
+	max-width: 250px;
+}
+
+.card-body{
+	text-align: center;
+}
+
+.card-fuente-info{
+	font-size: 11px;
+	text-align: justify;
+	margin:0px;
+	/*font-weight: bold;*/
+}
+
+@media screen and (max-width: 991px){
+    .card-center {
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10px;
+		margin-bottom: 10px;
+    }
+    .rvoe-img {
+        min-width: 5vw ;
+        max-width: 15vw ;
+        display: flex;
+	   justify-content: center;
+        text-align: center;
+    }  
+}
+
+.container-form {
+	border: 2px solid #BC955C;
+	padding: 20px;
+	border-radius: 10px;
+}
+
+.btn-width{
+	width: 100%!important;
+}
+
+.tabla-escuelas {
+	display: block;
+	overflow-x: auto;
+	min-height: .01%;
+	width:100% !important;
+}
+
+.button-excel{
+	color:white;
+	background-color: green;
+	margin-right: 15px;
+}
+
+.alrt{
+	/*min-height:100%;*/
+	padding:10px 5px !important;
+	margin-bottom: 5px;
+}
+
+@media (min-width: 992px) {
+    .modal-lg, .modal-xl {
+    max-width: 950px;
+}
+    
+    
+/*
+@media (min-width: 500px) {
+    .modal, .modal-md {
+    max-width: 450px;
+} 
+*/   
+    
+.title-detalle {
+	color: #FFFFFF !important;
+	text-align: left !important;
+    }
+
+.size-img {
+	max-width: 20%;
+	max-height: 20%;
+}
+    
+    
+    
+.center-img{
+	display: flex;
+	justify-content: center;
+}
+/*    
+body .modal-dialog { 
+    max-width: 50%;
+    width: auto !important;
+    display: inline-block;
+} 
+    
+.modal {
+  z-index: -1;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-open .modal {
+   z-index: 1050;
+}    
+*/
+.modal-rvoe{
+    max-width: 50%;
+    z-index: -1;
+}
+.tabla-rvoes {
+	width:100% !important;
+    text-align-last: left;
+    cursor: pointer;
+}
+
+@media only screen and (min-width: 992px) {
+    .rvoe-img {
+        /*max-width: 20vw;*/
+        max-width: 200px;
+        max-height: 20vh;
+    }
+    .title-detalle {
+        color: #FFFFFF !important;
+        text-align: left !important;
+    }
+}
+/*
+@media only screen and (min-width: 0px) and (max-width: 991px){
+	.rvoe-img {
+        min-width: 10vw ;
+        max-width: 10vh ;
+    }  
+}
+*/

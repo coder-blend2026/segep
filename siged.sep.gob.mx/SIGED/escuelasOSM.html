@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es-MX" class="no-js">
+    
+<!-- Mirrored from siged.sep.gob.mx/SIGED/escuelasOSM.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:22:35 GMT -->
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="cache-control" content="no-cache"/>
+        <meta name="copyright" content="SEP - SIGED" />
+        <title>SEP | SIGED</title>
+
+        <link rel="stylesheet" href="../../unpkg.com/leaflet%401.7.1/dist/leaflet.css"
+            integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+            crossorigin="" />
+
+        <!-- Open Street Maps - Make sure you put this AFTER Leaflet's CSS -->
+        <script src="../../unpkg.com/leaflet%401.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+
+        <style>
+            #mapa-escuela {
+                width: 100%;
+                height: 370px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="mapa-escuela"></div>
+        <script>
+            var map;
+            // Init Open Street Maps
+            function crearMapa(latitud,longitud) {
+                // set up the map
+                map = new L.Map('mapa-escuela');
+                var osmUrl='../../%7bs%7d.tile.openstreetmap.org/%7bz%7d/%7bx%7d/%7by%7d.png';
+                var osmAttrib='Map data © <a href="https://openstreetmap.org/">OpenStreetMap</a> contributors';
+                var osm = new L.TileLayer(osmUrl, {minZoom: 2, maxZoom: 19, attribution: osmAttrib});
+                map.setView(new L.LatLng(latitud, longitud),15);
+                map.addLayer(osm);
+
+                var marker = L.marker([latitud, longitud]).addTo(map);
+                // marker.bindPopup("<b>Botanischer Garten</b><br>is here").openPopup();
+            }
+
+            window.addEventListener('message', event => {
+                resultado = eval(event.data);
+            });
+        </script>
+    </body>
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/escuelasOSM.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:22:38 GMT -->
+</html>

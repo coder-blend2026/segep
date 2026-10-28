@@ -1,0 +1,558 @@
+var app = angular.module("docentes", ["ngResource"]);
+
+app.controller("docentesController", [
+    "$scope",
+    "$http",
+    "$window",
+    "$rootScope",
+    function ($scope, $http, $window, $rootScope) {
+        //$scope.primeraBusqueda = 1;
+
+        $scope.cifraAnual = null;
+        $scope.cifraAnualPeriodo = "";
+        $scope.cifraAnualDocentesGlobales = 0;
+        $scope.cifraAnualPreliminar = 0;
+
+        $scope.tipoBusqueda = "";
+
+        //Se utiliza para apagar los warnings que se muestran en el navegador cuando la construcción del datatable no encuentra alguna variable en el json.
+        $.fn.dataTable.ext.errMode = "none";
+
+        $scope.getDocentesGlobales = function () {
+            //Verificar info estadistica global
+            $scope.cifraAnual = sessionStorage.getItem("cifraAnual");
+            console.log("Buscando valor de totales." + $scope.cifraAnual);
+            if ($scope.cifraAnual === null) {
+                //Buscar en API el valor de alumnos,docentes y escuelas
+                this.getTotales();
+            } else {
+                console.log("Se tiene en SS");
+                $scope.cifraAnualDocentesGlobales = Intl.NumberFormat("en-US").format(
+                    JSON.parse($scope.cifraAnual).totalDocentes
+                );
+                $scope.cifraAnualPeriodo = JSON.parse($scope.cifraAnual).periodo;
+                $scope.cifraAnualPreliminar = JSON.parse($scope.cifraAnual).preliminar;
+            }
+        };
+
+        $scope.getTotales = function () {
+            $http.get($scope.getURLEstadistica() + "cifraAnual").success(function (data) {
+                $scope.cifraAnual = JSON.stringify(data.cifraAnualDTO[0]);
+                sessionStorage.setItem("cifraAnual", $scope.cifraAnual);
+                $scope.cifraAnualDocentesGlobales = Intl.NumberFormat("en-US").format(
+                    JSON.parse($scope.cifraAnual).totalDocentes
+                );
+                $scope.cifraAnualPeriodo = JSON.parse($scope.cifraAnual).periodo;
+                console.log("Se cargó en sesión : " + $scope.cifraAnual);
+                console.log("cifraAnualPeriodo en sesión : " + $scope.cifraAnualPeriodo);
+            });
+        };
+
+        $scope.getURLEstadistica = function () {
+            return global_uri + "/Estadisticas/";
+        };
+
+        $scope.getDocentesParams = function () {
+            return global_uri + "/docente/docenteList/";
+        };
+
+        var addParam = function (queryString, key, values) {
+            return (queryString += "" + key + "=" + values);
+        };
+
+        //Función para excel
+        $scope.getURLSchoolExcel = function () {
+            return global_uri + "/docente/docenteReporte/";
+        };
+
+        $scope.getDocenteCURP = function () {
+            return global_uri + "/docente/docenteDetalle/curp=";
+        };
+
+        $scope.getRecordsByPage = function () {
+            return 10;
+        };
+
+        $scope.getConsultaDocente = function (tipoBusqueda) {
+            parametros = "";
+
+            console.log("1getConsultaDocente.tipoBusqueda:" + tipoBusqueda);
+
+            $scope.tipoBusqueda = tipoBusqueda;
+
+            console.log("2getConsultaDocente.$scope.tipoBusqueda:" + $scope.tipoBusqueda);
+
+            $scope.newSearch();
+
+            if ($scope.tipoBusqueda == "curp") {
+                curp = $scope.curp;
+                curp = curp.toUpperCase();
+
+                var expreg =
+                    /^([A-Z]{4})([0-9]{6})([HM]{1})(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/;
+
+                if (expreg.test(curp)) {
+                    /*El mismo end-point se utiliza para ambos tipos de búsqueda, por lo que es necesario listar los parámetros en la URL*/
+                    parametros = addParam(parametros, "nombre", "");
+                    parametros = addParam(parametros, "&primerAp", "");
+                    parametros = addParam(parametros, "&segundoAp", "");
+                    parametros = addParam(parametros, "&curp", $scope.curp);
+                    crearTablaDocentes(parametros);
+                } else {
+                    console.log("La CURP NO es correcta");
+                    $("#modalCurpError").modal("show");
+                }
+            } else if ($scope.tipoBusqueda == "nombre") {
+                /*El mismo end-point se utiliza para ambos tipos de búsqueda, por lo que es necesario listar los parámetros en la URL*/
+                parametros = addParam(parametros, "nombre", $scope.nombre);
+                parametros = addParam(parametros, "&primerAp", $scope.primerAp);
+
+                if ($scope.segundoAp == null || $scope.segundoAp === undefined) {
+                    parametros = addParam(parametros, "&segundoAp", "");
+                } else {
+                    parametros = addParam(parametros, "&segundoAp", $scope.segundoAp);
+                }
+
+                parametros = addParam(parametros, "&curp", "");
+                crearTablaDocentes(parametros);
+            }
+        };
+
+        var crearTablaDocentes = function (parametros) {
+            //processing();
+            console.log("Antes de construir la tabla");
+
+            var table = $("#tabla-docentes").DataTable({
+                destroy: true,
+                language: { url: "js/datatables/datatable.spanish.lang" },
+                ajax: {
+                    url: $scope.getDocentesParams() + parametros + "&primer=1&ultimo=1000",
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+                    },
+                    data: function (data) {
+                        processing();
+                    },
+                    dataSrc: function (d) {
+                        var datosLimpios = [];
+                        noprocessing();
+
+                        d.forEach(function (valor) {
+                            datosLimpios.push(valor.datos[0]);
+                        });
+
+                        if (datosLimpios.length < 1) {
+                            $("#sectionResultWithoutData").show();
+                            console.log("length menor a cero 1417");
+                        } else {
+                            $("#sectionResultWithData").show();
+                        }
+
+                        $("html, body").animate({ scrollTop: 290 }, 1000);
+                        return datosLimpios;
+                    }
+                },
+                columns: [
+                    {
+                        name: "CURP",
+                        data: "nombre",
+                        render: function (data, type, full, meta) {
+                            if (full.segundoAp === undefined) full.segundoAp = "";
+                            return full.nombre + " " + full.primerAp + " " + full.segundoAp;
+                        }
+                    },
+                    { name: "NOMBREENTIDAD", data: "nombreEntidad" },
+                    { name: "NOMBREMUNICIPIO", data: "nombreMunicipio" },
+                    { name: "NOMBRELOCALIDAD", data: "nombreLocalidad" },
+                    { name: "NOMBRECT", data: "nombreCt" }
+                ]
+            });
+
+            var table = $("#tabla-docentes").DataTable();
+
+            $("#textoCamposObligatorios").hide();
+
+            $("#tabla-docentes tbody").unbind("click");
+            $("#tabla-docentes tbody").on("click", "tr", function () {
+                var docente = table.row(this).data();
+                $scope.showDetails(docente.curp, docente.cct);
+            });
+        };
+
+        var processing = function () {
+            $("#modal-loading").modal("show");
+            $(".tiempo_fuera").hide();
+            setTimeout(revisaModal, 5000);
+            console.log("processing - curp");
+            console.log(curp);
+        };
+
+        var noprocessing = function () {
+            $("#modal-loading").modal("hide");
+        };
+
+        var revisaModal = function () {
+            /*if (($("#modal-loading").data('bs.modal') || {}).isShown) {*/
+            if ($("#modal-loading").is(":visible")) {
+                $(".tiempo_fuera").show();
+            }
+        };
+
+        $scope.newSearch = function () {
+            $("#sectionResultWithData").hide();
+            $("#sectionResultWithoutData").hide();
+            $("#textoCamposObligatorios").show();
+        };
+
+        $scope.generaExcel = function () {
+            console.log("Entro a generaExcel 1837");
+
+            console.log("generaExcel.$scope.tipoBusqueda:" + $scope.tipoBusqueda);
+
+            parametros = "";
+
+            if ($scope.tipoBusqueda == "curp") {
+                curp = $scope.curp;
+                curp = curp.toUpperCase();
+
+                var expreg =
+                    /^([A-Z]{4})([0-9]{6})([HM]{1})(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/;
+
+                if (expreg.test(curp)) {
+                    /*El mismo end-point se utiliza para ambos tipos de búsqueda, por lo que es necesario listar los parámetros en la URL*/
+                    parametros = addParam(parametros, "nombre", "");
+                    parametros = addParam(parametros, "&primerAp", "");
+                    parametros = addParam(parametros, "&segundoAp", "");
+                    parametros = addParam(parametros, "&curp", $scope.curp);
+                    crearExcel(parametros);
+                } else {
+                    console.log("La CURP NO es correcta");
+                    $("#modalCurpError").modal("show");
+                }
+            } else if ($scope.tipoBusqueda == "nombre") {
+                /*El mismo end-point se utiliza para ambos tipos de búsqueda, por lo que es necesario listar los parámetros en la URL*/
+                parametros = addParam(parametros, "nombre", $scope.nombre);
+                parametros = addParam(parametros, "&primerAp", $scope.primerAp);
+
+                if ($scope.segundoAp == null || $scope.segundoAp === undefined) {
+                    parametros = addParam(parametros, "&segundoAp", "");
+                } else {
+                    parametros = addParam(parametros, "&segundoAp", $scope.segundoAp);
+                }
+
+                parametros = addParam(parametros, "&curp", "");
+                crearExcel(parametros);
+            }
+        };
+
+        var crearExcel = function (parametros) {
+            console.log("Excel: 1838");
+
+            processing();
+            $http({
+                method: "get",
+                url: $scope.getURLSchoolExcel() + parametros,
+                data: ""
+            }).success(function (data) {
+                $(".tiempo_fuera").show();
+                noprocessing();
+                if (data.Docentes != null && data.Docentes.length > 0) {
+                    var htmlTable =
+                        "<table ><thead><tbody>" +
+                        '<th style="color: #ffffff;background-color:#C80202;border: 1px solid black;width:310px;height: 60px;text-align: center;font-weight: normal;font-size: 14px">Nombre</th>' +
+                        '<th style="color: #ffffff;background-color:#C80202;border: 1px solid black;width:180px;height: 60px;text-align: center;font-weight: normal;font-size: 14px">Apellido Paterno</th>' +
+                        '<th style="color: #ffffff;background-color:#C80202;border: 1px solid black;width:180px;height: 60px;text-align: center;font-weight: normal;font-size: 14px">Apellido Materno</th>' +
+                        '<th style="color: #ffffff;background-color:#C80202;border: 1px solid black;width:180px;height: 60px;text-align: center;font-weight: normal;font-size: 14px">Nombre de la entidad</th>' +
+                        '<th style="color: #ffffff;background-color:#C80202;border: 1px solid black;width:310px;height: 60px;text-align: center;font-weight: normal;font-size: 14px">Nombre del municipio o delegación</th>' +
+                        '<th style="color: #ffffff;background-color:#C80202;border: 1px solid black;;width:410px;height: 60px;text-align: center;font-weight: normal;font-size: 14px">Nombre de localidad</th>' +
+                        '<th style="color: #ffffff;background-color:#C80202;border: 1px solid black;width:310px;height: 60px;text-align: center;font-weight: normal;font-size: 14px">Clave del centro de trabajo</th>' +
+                        '<th style="color: #ffffff;background-color:#C80202;border: 1px solid black;width:510px;height: 60px;text-align: center;font-weight: normal;font-size: 14px">Nombre del centro de trabajo</th>';
+
+                    data.Docentes.forEach(function (docente) {
+                        htmlTable += "<tr>";
+                        htmlTable += "<td>" + docente.datos[0].nombre + "</td>";
+                        htmlTable += "<td>" + docente.datos[0].primerAp + "</td>";
+                        htmlTable += "<td>" + docente.datos[0].segundoAp + "</td>";
+                        htmlTable += "<td>" + docente.datos[0].nombreEntidad + "</td>";
+                        htmlTable += "<td>" + docente.datos[0].nombreMunicipio + "</td>";
+                        htmlTable += "<td>" + docente.datos[0].nombreLocalidad + "</td>";
+                        htmlTable += "<td>" + docente.datos[0].cct + "</td>";
+                        htmlTable += "<td>" + docente.datos[0].nombreCt + "</td>";
+                        htmlTable += "</tr>";
+                    });
+
+                    /*htmlTable +='<tr></tr><tr></tr><tr><td colspan="4" style="border: 1px solid black;font-family: serif;font-size: 14px"> Con fundamento en lo dispuesto en los artículos 12 fracción X y 13 fracción VII de la Ley General de Educación, la presente información se encuentra contenida en el <b>Sistema de Información y Gestión Educativa (SIGED)</b></td></tr><tr></tr><tr><td colspan="4" style="text-align:center;;font-family: serif;font-size: 14px"><b>Dirección General del Sistema de Información y Gestión Educativa</b></td></tr><tr></tr><tr><td style="vertical-align: top;border: 1px solid black;font-family: serif;font-size: 14px"><b>Fuentes:</b></td><td colspan="3" style="border: 1px solid black;font-family: serif;font-size: 14px"> <b>Información de centros de trabajo educativos:</b> Catálogo Nacional de Centros de Trabajo, Dirección General de Planeación, Programación y Estadística Educativa / SPEC / SEP</td></tr><tr><td></td><td colspan="3" style="border: 1px solid black;font-family: serif;font-size: 14px"> <b>Información estadística educativa:</b> Cuestionarios del formato 911 (inicio de ciclo escolar 201X - 201X), Dirección General de Planeación, Programación y Estadística Educativa / SPEC / SEP</td></td></tr>';  */
+
+                    htmlTable +=
+                        '<tr></tr><tr></tr><tr><td colspan="4" style="border: 1px solid black;font-family: serif;font-size: 14px"> La información contenida en el <b>Sistema de Información y Gestión Educativa (SIGED)</b> se integra con fundamento en lo dispuesto en los artículos 113 fracción XIII y 114 fracción IX de la Ley General de Educación, así como de otras disposiciones normativas.</td></tr><tr></tr><tr><td colspan="4" style="text-align:center;;font-family: serif; font-size: 14px"><b>Dirección General de Planeación, Programación y Estadística Educativa</b></td></tr><tr></tr><tr><td style="vertical-align: top;border: 1px solid black;font-family: serif;font-size: 14px"><b>Fuentes:</b></td><td colspan="3" style="border: 1px solid black;font-family: serif;font-size: 14px"> <b>Información de centros de trabajo educativos:</b> Catálogo Nacional de Centros de Trabajo, Dirección General de Planeación, Programación y Estadística Educativa / SEP</td></tr><tr><td></td><td colspan="3" style="border: 1px solid black;font-family: serif;font-size: 14px"> <b>Información estadística educativa:</b> Cuestionarios del formato 911 (inicio de ciclo escolar 2023 - 2024), Dirección General de Planeación, Programación y Estadística Educativa / SEP</td></td></tr>';
+
+                    htmlTable += "</tbody></thead></table>";
+
+                    console.log(htmlTable);
+                    var htmlTable = htmlTable.replace(/undefined/g, "");
+
+                    var ua = window.navigator.userAgent;
+                    var msie = ua.indexOf("MSIE ");
+
+                    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+                        // If Internet Explorer
+                        var txtArea1 = document.getElementById("txtArea1");
+                        txtArea1.contentWindow.document.open("txt/html", "replace");
+                        txtArea1.contentWindow.document.write(htmlTable);
+                        txtArea1.contentWindow.document.close();
+                        txtArea1.contentWindow.focus();
+                        var sa = txtArea1.contentWindow.document.execCommand(
+                            "SaveAs",
+                            true,
+                            "concentrado_docentes.xls"
+                        );
+                    } else {
+                        var data_type = "data:application/vnd.ms-excel;charset=utf-8";
+                        var a = document.createElement("a");
+                        document.body.appendChild(a); // You need to add this line
+                        var uint8 = new Uint8Array(htmlTable.length);
+                        for (var i = 0; i < uint8.length; i++) {
+                            uint8[i] = htmlTable.charCodeAt(i);
+                        }
+
+                        var xData = new Blob([uint8], { type: "text/csv" });
+                        var xUrl = URL.createObjectURL(xData);
+                        a.href = xUrl;
+
+                        a.download = "concentrado_docentes.html";
+                        a.click();
+                    }
+                }
+            });
+        };
+
+        $scope.showDetails = function (curp, cct) {
+            console.log("Entró a showDetails 2101");
+
+            processing();
+            $scope.getFuente();
+            console.log("curp");
+            console.log(curp);
+            console.log(curp.getFuente);
+            //console.log("cct");
+            //console.log(cct);
+
+            $http({
+                method: "get",
+                url: $scope.getDocenteCURP() + curp + "&cct=" + cct,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                }
+            })
+                .success(function (data) {
+                    $scope.docente = data.docente[0];
+                    $scope.plazas = data.plazas;
+                    $scope.fuentePlazas = data.plazas[0];
+                    $scope.fuentePlazaCCT = data.fuentes[0];
+                    console.log($scope.fuentePlazaCCT);
+
+                    console.log("datos plazas 1025");
+                    console.log(data.plazas);
+                    console.log($scope.plazas);
+
+                    var table = $("#idDtPlazas").DataTable({
+                        // responsive: true,
+                        dom: "tpr",
+                        destroy: true,
+                        procesing: true,
+                        serverSide: false,
+                        data: $scope.plazas,
+                        pageLength: $scope.getRecordsByPage(),
+                        language: {
+                            url: "js/datatable.spanish.lang"
+                        },
+                        columns: [
+                            { data: "escuela" },
+                            { data: "categoria" },
+                            { data: "clavePlaza" },
+                            //{"data": "estatus"},
+                            { data: "entidad" },
+                            { data: "municipio" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: [0],
+                                orderData: [0, 1]
+                            },
+                            {
+                                targets: [1],
+                                orderData: [0, 1]
+                            },
+                            {
+                                targets: [2],
+                                orderData: [0, 1]
+                            },
+                            {
+                                targets: [3],
+                                orderData: [0, 1]
+                            },
+                            {
+                                targets: [4],
+                                orderData: [0, 1]
+                            } /*, {
+                                 targets: [5],
+                                 orderData: [0, 1]
+                                 }*/
+                        ]
+                    });
+                    noprocessing();
+
+                    console.log("prueba:" + $scope.tipoBusqueda);
+                    $("#modal_docente").modal("show");
+                })
+                .error(function (error) {});
+        };
+
+        $scope.getFuente = function () {
+            console.log("Entró a getFuente 2101");
+            //console.log(curp);
+            var fuente = $scope.fuente;
+
+            $("#btnResetForm").removeClass("disabled");
+            $http({
+                method: "GET",
+                url: global_uri + "/catalogos/fuente",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                }
+            })
+                .success(function (data) {
+                    $scope.primeraBusqueda = 0;
+                    if (data.fuentes === undefined) $scope.fuentes = 0;
+                    else $scope.fuentes = data.fuentes[0];
+
+                    noprocessing();
+                })
+                .error(function (error) {
+                    $scope.fuentes = null;
+                });
+        };
+
+        $scope.consultaSPD = function () {
+            console.log("entro a consultaSPD");
+            console.log("$scope.curp" + $scope.curp);
+
+            curp = $scope.curp;
+            curp = curp.toUpperCase();
+
+            var expreg =
+                /^([A-Z]{4})([0-9]{6})([HM]{1})(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/;
+
+            if (expreg.test(curp)) {
+                console.log("entro al if");
+
+                var table = $("#tabla-spd").DataTable({
+                    //responsive: true,
+                    destroy: true,
+                    language: { url: "js/datatables/datatable.spanish.lang" },
+                    ajax: {
+                        url: global_uri + "/docente/consultaSPD/curp=" + curp,
+                        beforeSend: function (request) {
+                            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+                        },
+                        dataSrc: function (json) {
+                            var datosLimpios = [];
+                            json.SPD.forEach(function (valor) {
+                                datosLimpios.push(valor);
+                            });
+
+                            if (datosLimpios.length < 1) {
+                                $("#sectionResultWithoutData").show();
+                                console.log("length menor a cero 1417");
+                            } else {
+                                $("#sectionResultWithData").show();
+                            }
+
+                            $("html, body").animate({ scrollTop: 290 }, 1000);
+                            return datosLimpios;
+                        }
+                    },
+                    columns: [
+                        { name: "Ciclo", data: "cicloEscolar" },
+                        { name: "Nivel educativo", data: "nivel" },
+                        { name: "CURP", data: "curp" },
+                        { name: "Tipo de evaluación", data: "evaluacion" },
+                        { name: "Proceso", data: "proceso" },
+                        { name: "Grupo", data: "grupo" },
+                        { name: "Posición en el listado nominal ordenado de resultado", data: "posicion" },
+                        { name: "Puntaje", data: "puntaje" }
+                    ]
+                });
+
+                /*
+            var table = $('#tabla-spd').DataTable();
+*/
+                $("#textoCamposObligatorios").hide();
+            } else {
+                console.log("La CURP NO es correcta");
+                $("#modalCurpError").modal("show");
+            }
+        };
+
+        $scope.consultaUSICAMM = function () {
+            console.log("entro a consultaUSICAMM");
+            console.log("$scope.curp" + $scope.curp);
+
+            curp = $scope.curp;
+            curp = curp.toUpperCase();
+
+            var expreg =
+                /^([A-Z]{4})([0-9]{6})([HM]{1})(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/;
+
+            if (expreg.test(curp)) {
+                console.log("entro al if");
+
+                var table = $("#tabla-usicamm").DataTable({
+                    //responsive: true,
+                    destroy: true,
+                    language: { url: "js/datatables/datatable.spanish.lang" },
+                    ajax: {
+                        url: global_uri + "/docente/consultaUSICAMM/curp=" + curp,
+                        beforeSend: function (request) {
+                            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+                        },
+                        dataSrc: function (json) {
+                            var datosLimpios = [];
+                            json.USICAMM.forEach(function (valor) {
+                                datosLimpios.push(valor);
+                            });
+
+                            if (datosLimpios.length < 1) {
+                                $("#sectionResultWithoutData").show();
+                                console.log("length menor a cero 1539");
+                            } else {
+                                $("#sectionResultWithData").show();
+                            }
+
+                            $("html, body").animate({ scrollTop: 290 }, 1000);
+                            return datosLimpios;
+                        }
+                    },
+                    columns: [
+                        { name: "Ciclo escolar", data: "cicloEscolar" },
+                        { name: "Nivel educativo", data: "nivel" },
+                        { name: "CURP", data: "curp" },
+                        { name: "Tipo de valoración", data: "valoracion" },
+                        { name: "Proceso", data: "proceso" },
+                        { name: "Posición en el listado nominal ordenado de resultado", data: "posicion" },
+                        { name: "Puntaje final", data: "puntaje" }
+                    ]
+                });
+                /*
+            var table = $('#tabla-spd').DataTable();
+*/
+                $("#textoCamposObligatorios").hide();
+            } else {
+                console.log("La CURP NO es correcta");
+                $("#modalCurpError").modal("show");
+            }
+        };
+    }
+]);

@@ -1,0 +1,112 @@
+$(document).ready(function() {
+    console.log("Entro a la función document ready");
+
+    var queryString = window.location.search.split('folio=');
+    if(queryString != null && queryString.length > 1){
+        //$('#buscaFolio').val(queryString[1]);
+
+        setTimeout(function(){
+            $('#btn-buscar').click()
+        }, 2000);
+
+    }
+});
+
+
+var app = window.angular.module('documentos', ['ngResource']);
+
+app.controller('documentosController', ['$scope', '$http', '$window', '$rootScope',
+    function ($scope, $http, $window, $rootScope) {
+        $scope.primeraBusqueda = 1;
+        $scope.datos = null;
+        $scope.tipo_busqueda = 1;
+        
+
+        var queryString = $window.location.search.split('folio=');
+        if(queryString != null && queryString.length > 1){
+            $scope.folio = queryString[1]
+        }
+
+        
+        $scope.getConsultaByFOLIO = function () {
+            var folio;
+
+            $('#sectionResultWithData').hide();
+            $('#sectionResultWithoutData').hide();
+            $('#sectionErrorWhileConnecting').hide();
+            //$('#sectionResultWithDumData').hide();
+
+            if($scope.folio != null && $scope.folio.length > 1){
+                folio = $scope.folio.toUpperCase();
+
+                processing();
+                
+                $http({
+                    method: 'GET',
+                    url: global_uri+'/certificado/consultaCertificado/?folios='+folio,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                }).success(function (data) {
+                    if(data.datos === undefined || data.datos.length== 0){
+                        $scope.datos = 0;
+                        $('#sectionResultWithoutData').show();
+                        /*$('html, body').animate({scrollTop: 290}, 1000);*/
+                        $('html, body').animate({scrollTop: $("#sectionResultWithData").offset().top - 300}, 1000); /*50*/
+                        console.log("success-if-scope.datos:"+$scope.datos);
+                    }else{
+                        $scope.datos = data.datos[0];
+                        $('#sectionResultWithData').show();
+                        $('html, body').animate({scrollTop: $("#sectionResultWithData").offset().top - 300}, 1000); /*50*/
+                        console.log("success-else-scope.datos:"+$scope.datos);
+                    }
+                    noprocessing();
+                }).error(function (error) {
+                    $('#sectionErrorWhileConnecting').show();
+                    $('html, body').animate({scrollTop: $("#sectionErrorWhileConnecting").offset().top - 300}, 1000); /*50*/
+                    $scope.datos = null;
+                    console.log("error-scope.datos:"+$scope.datos);
+                });
+
+            }
+
+            console.log("último-scope.datos:"+$scope.datos);
+         
+        }
+
+        $scope.newSearch = function () {
+            $scope.datos = null;
+            $('#sectionResultWithData').hide();
+            $('#sectionResultWithoutData').hide();
+            $('#sectionErrorWhileConnecting').hide();
+            $scope.resetForm();
+        }
+
+        $scope.resetForm = function () {
+            $scope.folio = null;
+        }
+
+        var processing = function () {
+            $("#modal-loading").modal('show');
+            $('.tiempo_fuera').hide();
+            setTimeout(revisaModal, 5000);
+        }
+
+        var noprocessing = function () {
+            $("#modal-loading").modal('hide');
+        }
+        
+        var reprocessing = function () {
+            $("#modal-reprocess").modal('show');
+            $('.tiempo_fuera').hide();
+            setTimeout(revisaModal, 5000);
+        }
+
+        var revisaModal = function () {
+            if($("#modal-loading").is(":visible")){
+                $('.tiempo_fuera').show();
+            }
+        }
+ 
+    }]
+);

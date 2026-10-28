@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/escuelas.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:19:07 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEP | SIGED</title>
+    <link href="../../framework-gb.cdn.gob.mx/gm/v3/assets/styles/main.css" rel="stylesheet">
+    <link href="https://framework-gb.cdn.gob.mx/gm/v3/assets/images/favicon.ico" rel="shortcut icon">
+    <link href="../../framework-gb.cdn.gob.mx/gm/accesibilidad/css/gobmx-accesibilidad.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/navbar-settings.css">  
+    <link rel="stylesheet" type="text/css" href="css/global_siged.css">
+    <link rel="stylesheet" type="text/css" href="css/escuelas.css">
+
+    <link href="css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+
+    <!--Para calendario escolar-->
+    <link rel="stylesheet" type="text/css" href="css/calendar/fullcalendar.min.css">
+    <link rel="stylesheet" type="text/css" href="css/calendario-escolar.css">
+
+
+</head>
+
+<body ng-app="escuelas">
+    <div id="div-sub-navbar"></div>
+
+    <div>
+        <img class="img-background" src="images/bnr_escuelas.html">
+    </div>
+
+    <div class="container container-top" ng-controller="escuelasController" ng-init="getEscuelasGlobales()">
+        <div class="row align-items-center">
+            <div class="column col-lg-8">
+                <h3>Sistema de Información y Gestión Educativa</h3>
+                <h2 class="mt-1">Consulta de escuelas</h2>
+            </div>
+            <div class="column col-lg-4 mt-lg-3">
+                <div class="card card-center">
+                  <div class="card-body">
+                    <h5 class="card-title mt-1">Ciclo Escolar <span ng-bind="cifraAnualPeriodo"></span></h5>
+                    <h4 class="card-subtitle mt-3"><span class="modify-color" ng-bind="cifraAnualEscuelasGlobales"></span><span class="modify-color">%</span></h4>
+                    <p class="card-text mt-2">De escuelas en todo el país son públicas y de educación básica<span ng-if="cifraAnualPreliminar == 1">*</span>.</p>
+                    <hr class="mt-1 mb-1">
+                    <p class="card-fuente-info">Fuente: Sistema de Estadísticas Continuas de Educación del Formato 911, DGPPyEE, SEP.</p>
+                    <p class="card-fuente-info"><span ng-if="cifraAnualPreliminar == 1">*Cifras preliminares</span></p>
+                  </div>
+                </div>              
+            </div>
+        </div>
+    </div>
+
+    <div class="container bc_title" style="margin-top: 2vh; margin-bottom: -5vh">
+        <div class="row">
+            <div class="col-sm-8">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index-2.html">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="index-2.html#consultas">Consultas</a></li>
+                    <li class="breadcrumb-item active"  aria-current="page"><a href="#">Consulta de escuelas</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <main id="search" ng-controller="escuelasController">
+        <div class="container container-form mt-3" >
+            <div>
+                <form class="form mb-1" ng-submit="searchSchool();">
+                    <div class="row justify-content-center">
+                        <div class="column col-12">
+                          <div class="form-group">
+                            <label for="nombreCCT" class="control-label">Nombre o Clave de Centro de Trabajo:</label>
+                            <input id="nombreCCT" type="text" placeholder="Ingresa el nombre o clave del Centro de Trabajo"
+                                    class="form-control mt-3"
+                                    minlength="5" 
+                                    maxlength="200"
+                                    ng-model="schoolName">
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column col-lg-4">
+                          <div class="form-group">
+                            <label id="lblState" for="lstStates" class="control-label" title="Entidad">Entidad:</label>
+                            <select id="lstStates"
+                                ng-model="state" 
+                                ng-change="getMunicipalities()"
+                                ng-options="state.nombre for state in states track by state.id"
+                                class="form-control mt-3">
+                                <option label="selecciona una opción" selected="selected" 
+                                    value="" title="">Selecciona una opción</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="column col-lg-4">
+                          <div class="form-group">
+                            <label id="lblMunicipalities" for="lstMunicipalities" class="control-label" title="Municipio">Municipio:</label>
+                            <select id="lstMunicipalities"
+                                ng-model="municipality"
+                                ng-change="getLocations()"
+                                ng-options="municipality.nombre for municipality in municipalities track by municipality.id"
+                                class="form-control mt-3">
+                                <option label="selecciona una opción" selected="selected" 
+                                    value="" title="Selecciona una opción">Selecciona una opción</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="column col-lg-4">
+                          <div class="form-group">
+                            <label id="lblLocations" for="lstLocations" class="control-label" title="Localidad:">Localidad:</label>
+                            <select id="lstLocations"
+                                ng-model="olocation"
+                                ng-options="location.nombre for location in locations track by location.id"
+                                class="form-control mt-3">
+                                <option label="selecciona una opción" selected="selected"
+                                    value="" title="selecciona una opción">selecciona una opción</option>
+                            </select>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column col-lg-4">
+                            <div class="form-group">
+                                <label id="lbltipoEducativo" for="lsttipoEducativo" class="control-label" title="Tipo:">Tipo:</label>
+                            <select id="lsttipoEducativo"
+                                ng-model="tipoEducativo"
+                                ng-options="tipoEducativo.nombre for tipoEducativo in tipoEducativos track by tipoEducativo.id"
+                                class="form-control mt-3">
+                                <option label="selecciona una opción" selected="selected"
+                                    value="" title="selecciona una opción">selecciona una opción</option>
+                            </select>
+                            </div>
+                        </div>
+                        
+                        <div class="column col-lg-4">
+                          <div class="form-group">
+                            <label id="lblLevels" for="lstLevels" class="control-label" title="Nivel educativo:">Nivel educativo:</label>
+                            <select id="lstLevels"
+                                ng-model="level" ng-change="getsubnivel()"
+                                ng-options="level.nombre for level in levels track by level.id"
+                                class="form-control mt-3">
+                                <option label="selecciona una opción" selected="selected"
+                                    value="" title="selecciona una opción">selecciona una opción</option>
+                            </select>
+                          </div>
+                        </div>
+                        
+                        <div class="column col-lg-4">
+                          <div class="form-group">
+                            <label id="lblsubnivel" for="lstsubnivel" class="control-label" title="Servicio educativo:">Servicio educativo:</label>
+                            <select id="lstsubnivel"
+                                ng-model="subnivel"
+                                ng-options="subnivel.nombre for subnivel in subnivels track by subnivel.id"
+                                class="form-control mt-3">
+                                <option label="selecciona una opción" selected="selected"
+                                    value="" title="selecciona una opción">selecciona una opción</option>
+                            </select>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column col-lg-4">
+                          <div class="form-group">
+                            <label id="lblSectors" for="lstSectors" class="control-label" title="Sostenimiento:">Sostenimiento:</label>
+                            <select id="lstSectors"
+                                ng-model="sector" ng-change="getsubcontrol()"
+                                ng-options="sector.nombre for sector in sectors track by sector.id"
+                                class="form-control mt-3">
+                                <option label="selecciona una opción" selected="selected"
+                                    value="" title="selecciona una opción">selecciona una opción</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="column col-lg-4">
+                        <div class="form-group">
+                            <label id="lblsubcontrol" for="lstsubcontrol" class="control-label" title="Subcontrol administrativo:">Subcontrol administrativo:</label>
+                            <select id="lstsubcontrol"
+                                ng-model="subcontrol"
+                                ng-options="subcontrol.nombre for subcontrol in subcontrols track by subcontrol.id"
+                                class="form-control mt-3">
+                                <option label="selecciona una opción" selected="selected"
+                                    value="" title="selecciona una opción">selecciona una opción</option>
+                            </select>
+                          </div>
+                        </div>    
+                        <div class="column col-lg-4">
+                          <div class="form-group">
+                            <label id="lblSchedules" for="lstSchedules" class="control-label" title="Turno:">Turno:</label>
+                            <select id="lstSchedules"
+                                ng-model="schedule"
+                                ng-options="schedule.nombre for schedule in schedules track by schedule.id"
+                                class="form-control mt-3">
+                                <option label="selecciona una opción" selected="selected"
+                                    value="" title="selecciona una opción">selecciona una opción</option>
+                            </select>
+
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="column col-lg-3 col-md-6 col-sm-6">
+                            <button id="btn-buscar" type="submit" class="btn btn-active btn-width mt-2">Buscar</button>
+                        </div>
+                        <div class="column col-lg-3 col-md-6 col-sm-6">
+                            <button id="btn-restablecer" type="reset" class="btn btn-secondary active btn-width mt-2" 
+                                        ng-click="newSearch()">Restablecer</button>
+                        </div>
+                    </div>                            
+                </form>
+            </div>
+        </div>
+
+        <div class="container" id="divResultsWithoutData">
+            <section id="sectionResultWithoutData" style="display:none;">
+                <div data-role="page" >
+                    <div class="top-buffer-submenu">
+                        <p class="titulo_subtexto" title="Información no encontrada">Información no encontrada</p>
+                        <hr class="red">
+                        <section style="margin: 20px;">
+                            <div class="alert alert-danger" >
+                                <p title="La información solicitada no se encuentra en nuestros registros"><b>La información solicitada no se encuentra en nuestros registros.</b></p>
+                                <br>
+                                <p title="Verifica los datos que ingresaste y vuelve a intentarlo.">Verifica los datos que ingresaste y vuelve a intentarlo.</p>
+                                <br>
+                                <button class="btn btn-danger " style="display:block; margin-left:auto; margin-right:auto" type="reset" ng-click="newSearch()" onclick="$('html,body').scrollTop(0);" title="Volver a intentarlo">Volver a intentarlo</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+            <section id="sectionErrorWhileConnecting" style="display:none;">
+                <div data-role="page" >
+                    <div class="top-buffer-submenu">
+                        <p class="titulo_subtexto"><span>No es posible mostrar el resultado de la búsqueda</span></p>
+                        <hr class="red">
+                        <section style="margin: 20px;">
+                            <div class="alert alert-danger">
+                                <p><b><span></span>Ocurrió un error mientras se realizaba la consulta</b></p>
+                                <br>
+                                <p><span>Verifica la conexión a internet y vuelve a intentarlo</span></p>
+                                <br>
+                                <button class="btn btn-danger " style="display:block; margin-left:auto; margin-right:auto" type="reset" ng-click="newSearch()" onclick="$('html,body').scrollTop(0);" title="Volver a intentarlo">"Volver a intentarlo</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+       <div id="divResultsWithData">
+            <section id="sectionResultWithData" style="display:none;">
+                <div class="container mb-5">
+                    <div class="row justify-content-end">
+                        <div class="column mb-3">
+                            <button id="btn-concentrado" type="button" ng-click="generaExcel()" class="btn pull-right button-excel" title="Obtener concentrado"><i class="bi bi-file-earmark-excel-fill"></i>&nbspObtener concentrado</button>
+                        </div>
+                        <div class="column col-md-12">
+                            <table id="tabla-escuelas" class="display nowrap tabla-escuelas">
+                                <thead class="header-order">
+                                    <tr>
+                                        <th title="CCT">CCT</th>
+                                        <th title="Entidad">Entidad</th>
+                                        <th title="Municipio">Municipio</th>
+                                        <th title="Localidad">Localidad</th>
+                                        <th title="Tipo">Tipo</th>
+                                        <th title="Escuela">Escuela</th>
+                                        <th title="Nivel escolar">Nivel escolar</th>
+                                        <th title="Subnivel">Subnivel</th>
+                                        <th title="Turno">Turno</th>
+                                        <th title="Sostenimiento">Sostenimiento</th>
+                                        <th title="Subcontrol">Subcontrol</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table> 
+                        </div>
+                    </div>
+                </div>
+            </section>    
+        </div>
+
+        <!--Inicia el código de pantalla modal para mostrar el detalle de la escuela seleccionada en la tabla-->
+        <div class="container">
+            <div class="modal fade" id="modal_datos_escuela">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 title="Consulta de escuelas"><span class="titulo_modal">Consulta escolar</span></h4>
+                        </div>
+                        <div class="modal-body">
+                            <!--Lista tabs para navegación entre opciones principales-->
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-link active" id="nav-tab-01" data-bs-toggle="tab" href="#nav-01" role="tab" aria-controls="nav-01" aria-selected="true" >
+                                    <span class="text" title="Información de la Escuela">Información de la Escuela</span>
+                                </a>
+                                <a class="nav-link" id="nav-tab-02" data-bs-toggle="tab" href="#nav-02" role="tab" aria-controls="nav-02" aria-selected="true" >
+                                    <span class="text" title="Calendario Escolar">Calendario Escolar</span>
+                                </a>
+                                <a class="nav-link" id="nav-tab-03" data-bs-toggle="tab" href="#nav-03" role="tab" aria-controls="nav-03" aria-selected="true"
+                                    ng-show="inifed != null && inifed !== undefined">
+                                    <span class="text" title="INIFED 2013-2018 (Histórico)">INIFED 2013-2018 (Histórico)</span>
+                                </a>
+                                <a class="nav-link" id="nav-tab-04" data-bs-toggle="tab" href="#nav-04" role="tab" aria-controls="nav-04" aria-selected="true"
+                                    ng-show="inifed_v2 != null && inifed_v2 !== undefined">
+                                    <span class="text" title="INIFED 2020-2022">INIFED 2020-2022</span>
+                                </a>
+                            </div>
+                            <!--Descripción de tabs para mostrar contenido-->
+                            <div class="tab-content" id="nav-tabContent">
+                                <p class="titulo_subtexto" id="cargando_escuela" style="text-align:center" title="Cargando información, por favor espera un momento...">
+                                    <i class="fa fa-spin fa-spinner"></i>Cargando información, por favor espera un momento...
+                                </p>
+                                <!--Información de la Escuela-->
+                                <div id="nav-01" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-tab-01">
+                                    <div id="info-escuela" style="display:none;">
+                                        <div id="datos-escuela" class="row">
+                                            <div class="col-12">
+                                                <h5>Fecha de actualización: {{school.fechaActualizacion}}</h5>
+                                            </div>
+
+                                            <!--Panel para los datos generales de la escuela-->
+                                            <div class="panel-group ficha-collapse col-12" id="accordionGenerales">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title" title="Escuela">
+                                                            <a data-parent="#accordionGenerales" data-bs-toggle="collapse" href="#panel-01" aria-expanded="true" aria-controls="panel-01">
+                                                                Datos generales<sup>(1)</sup>
+                                                            </a>
+                                                        </h4>
+                                                        <button type="button" class="collpase-button collapsed" data-parent="#accordionGenerales" data-bs-toggle="collapse" href="#panel-01"></button>
+                                                    </div>
+                                                    <div class="panel-collapse collapse" id="panel-01">
+                                                        <div class="panel-body">
+                                                            <div ng-show="school.nombreCT != null">
+                                                                <div class="col-lg-4 col-md-12" title="Nombre de escuela">Nombre:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.nombreCT" class="font-weight-bold"></span></div>
+                                                            </div>                                                            
+                                                            <div ng-show="school.claveCct != null">
+                                                                <div class="col-lg-4 col-md-12" title="Clave de escuela">Clave:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.claveCct" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.director != null">
+                                                                <div class="col-lg-4 col-md-12" title="Director">Director:</div>
+                                                                <div class="col-lg-8 col-md-12">
+                                                                    <b>
+                                                                        <span ng-bind="school.director" class="font-weight-bold"></span>
+                                                                        <span ng-bind="school.apellido1" class="font-weight-bold"></span>
+                                                                        <span ng-bind="school.apellido2" class="font-weight-bold"></span>
+                                                                    </b>
+                                                                </div>
+                                                            </div>
+                                                            <div ng-show="school.nombreNiv != null">
+                                                                <div class="col-lg-4 col-md-12" title="Nivel">Nivel:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.nombreNiv" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.nombreTur != null">
+                                                                <div class="col-lg-4 col-md-12" title="Turno">Turno:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.nombreTur" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.nombreCont != null">
+                                                                <div class="col-lg-4 col-md-12" title="Sostenimiento">Sostenimiento:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.nombreCont" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.nombreTipo != null">
+                                                                <div class="col-lg-4 col-md-12" title="Tipo">Tipo:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.nombreTipo" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.vigencia != null">
+                                                                <div class="col-lg-4 col-md-12" title="Situación">Situación:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.vigencia" class="font-weight-bold"></span></div>
+                                                            </div>
+
+                                                            <div class="row justify-content-center">
+                                                                <div ng-show="ctImagen.imagen != null" class="col-lg-6 col-md-12  mt-5" >
+                                                                    <div id="boyka" ng-href="data:image/png;base64,{{ctImagen.imagen}}"
+                                                                        data-fancybox-group="gallery"><img data-ng-src="data:image/png;base64,{{ctImagen.imagen}}"
+                                                                        alt="" class="img img-responsive"/>
+                                                                    </div>
+                                                                    <p class="text-center" title="Fotografía de la escuela">Fotografía de la escuela:<sup>(2)</sup></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                                        
+
+                                            <!--Panel para la dirección de la escuela-->
+                                            <div class="panel-group ficha-collapse col-12" id="accordionDireccion">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title" title="Dirección">
+                                                            <a data-parent="#accordionDireccion" data-bs-toggle="collapse" href="#panel-02" aria-expanded="true" aria-controls="panel-02">
+                                                                Dirección<sup>(1)</sup>
+                                                            </a>
+                                                        </h4>
+                                                        <button type="button" class="collpase-button collapsed" data-parent="#accordionDireccion" data-bs-toggle="collapse" href="#panel-02"></button>
+                                                    </div>
+                                                    <div class="panel-collapse collapse" id="panel-02">
+                                                        <div class="panel-body">
+                                                            <div ng-show="school.nombreEnt != null && school.nombreEnt.length > 1">
+                                                                <div class="col-lg-4 col-md-12" title="Entidad">Entidad:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.nombreEnt" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.nombreMun != null && school.nombreMun.length > 1">
+                                                                <div class="col-lg-4 col-md-12" title="Municipio">Municipio:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.nombreMun" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.nombreLoc != null && school.nombreLoc.length > 1">
+                                                                <div class="col-lg-4 col-md-12" title="Localidad">Localidad:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.nombreLoc" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.domicilio != null && school.domicilio.length > 1">
+                                                                <div class="col-lg-4 col-md-12" title="Dirección">Dirección:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.domicilio" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.entreCalle != null && school.entreCalle.length > 1">
+                                                                <div class="col-lg-4 col-md-12" title="Entre calles">Entre calles:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.entreCalle" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.entreCalle != null && school.nombreCol.length > 1">
+                                                                <div class="col-lg-4 col-md-12" title="Colonia">Colonia:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.nombreCol" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                            <div ng-show="school.codPost != null && school.codPost.length > 1">
+                                                                <div class="col-lg-4 col-md-12" title="Código Postal">Código Postal:</div>
+                                                                <div class="col-lg-8 col-md-12"><span ng-bind="school.codPost" class="font-weight-bold"></span></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                                        
+
+                                            <!--Panel para mostrar el mapa con la ubicación de la escuela-->
+                                            <div class="panel-group ficha-collapse col-12" id="accordionMapa">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title" title="Mapa">
+                                                            <a data-parent="#accordionMapa" data-bs-toggle="collapse" href="#panel-03" aria-expanded="true" aria-controls="panel-03">
+                                                                Mapa de ubicación<sup>(1)</sup>
+                                                            </a>
+                                                        </h4>
+                                                        <button type="button" class="collpase-button collapsed" data-parent="#accordionMapa" data-bs-toggle="collapse" href="#panel-03"></button>
+                                                    </div>
+                                                    <div class="panel-collapse collapse" id="panel-03">
+                                                        <div class="panel-body">
+
+                                                            <iframe title="" id="mapIFrame" src="escuelasOSM.html"
+                                                                height="380px" width="100%" scrolling="no"
+                                                                style="overflow: hidden"></iframe>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--Panel para mostrar estadísticas de la escuela-->
+                                            <div class="panel-group ficha-collapse col-12" id="accordionEstadisticas">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title" title="Estadísticas">
+                                                            <a data-parent="#accordionEstadisticas" data-bs-toggle="collapse" href="#panel-04" aria-expanded="true" aria-controls="panel-04">
+                                                                Estadísticas<sup>(3)</sup>
+                                                            </a>
+                                                        </h4>
+                                                        <button type="button" class="collpase-button collapsed" data-parent="#accordionEstadisticas" data-bs-toggle="collapse" href="#panel-04"></button>
+                                                    </div>
+                                                    <div class="panel-collapse collapse" id="panel-04">
+                                                        <div class="panel-body">
+                                                            <div>
+                                                                <div class="row">
+                                                                    <div class="column">
+                                                                        <p class="titulo_subtexto" title="Estadísticas generales">Cifras generales
+                                                                        </p>
+                                                                        <hr class="red" />
+                                                                    </div>
+                                                                </div>                                                                
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div id="girls" ng-if="stats.alumnosM !== undefined" 
+                                                                            title="Número de niñas">Número de niñas 
+                                                                            <div class="progress">
+                                                                                <div class="progress-bar progress-bar-striped"
+                                                                                    role="progressbar"
+                                                                                    aria-valuenow="{{girls}}"
+                                                                                    aria-valuemin="0" aria-valuemax="100"
+                                                                                    style="min-width: 2em; width: {{girls}}%">
+                                                                                    <span ng-bind="stats.alumnosM"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div id="boys" ng-if="stats.alumnosH !== undefined"
+                                                                            title="Número de niños">Número de niños
+                                                                            <div class="progress ">
+                                                                                <div class="progress-bar progress-bar-striped"
+                                                                                    role="progressbar"
+                                                                                    aria-valuenow=" {{boys}}"
+                                                                                    aria-valuemin="0" aria-valuemax="100"
+                                                                                    style="min-width: 2em; width: {{boys}}%">
+                                                                                    <span ng-bind="stats.alumnosH"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>                                            
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div id="men" ng-if="stats.docenteH !== undefined"
+                                                                            title="Número">Número de maestros
+                                                                            <div class="progress">
+                                                                                <div class="progress-bar progress-bar-striped"
+                                                                                    role="progressbar"
+                                                                                    aria-valuenow=" {{men}}"
+                                                                                    aria-valuemin="0" aria-valuemax="100"
+                                                                                    style="min-width: 2em; width: {{men}}%">
+                                                                                    <span ng-bind="stats.docenteH"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div id="women" ng-if="stats.docenteM !== undefined"
+                                                                            title="Número de maestras">Número de maestras
+                                                                            <div class="progress ">
+                                                                                <div class="progress-bar progress-bar-striped"
+                                                                                    role="progressbar"
+                                                                                    aria-valuenow=" {{women}}"
+                                                                                    aria-valuemin="0" aria-valuemax="100"
+                                                                                    style="min-width: 2em; width: {{women}}%">
+                                                                                    <span ng-bind="stats.docenteM"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>                                            
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="column col-lg-4" ng-if="stats.grdT !== undefined">
+                                                                        <div class="alert alert-info alrt">
+                                                                            <h4><span ng-bind="stats.grdT"></span></h4>
+                                                                            <i class="fa fa-pencil"></i><span title="Grados"> Grados</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-if="stats.gposT !== undefined">
+                                                                        <div class="alert alert-warning alrt">
+                                                                            <h4><span ng-bind="stats.gposT"></span></h4>
+                                                                            <i class="fa fa-users"></i><span title="Grupos"> Grupos</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-if="stats.aulaExi !== undefined">
+                                                                        <div class="alert alert-success alrt">
+                                                                            <h4><span ng-bind="stats.aulaExi"></span></h4>
+                                                                            <i class="fa fa-university"></i><span title="Aulas"> Aulas</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-if="stats.numCanchas !== undefined">
+                                                                        <div class="alert alert-info alrt">
+                                                                            <h4><span ng-bind="stats.numCanchas"></span></h4>
+                                                                            <i class="fa fa-soccer-ball-o"></i><span title="Canchas"> Canchas</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-if="stats.numComp !== undefined">
+                                                                        <div class="alert alert-warning alrt">
+                                                                            <h4><span ng-bind="stats.numComp"></span></h4>
+                                                                            <i class="fa fa-desktop"></i><span title="Computadoras"> Computadoras</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-if="stats.numPatios !== undefined">
+                                                                        <div class="alert alert-success alrt">
+                                                                            <h4><span ng-bind="stats.numPatios"></span></h4>
+                                                                            <i class="fa fa-child"></i><span title="Patios"> Patios</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="column col-lg-12"  ng-show="stats.docFisica >= 0">
+                                                                        <div class="alert alert-info alrt">
+                                                                            <h4><span ng-bind="stats.docFisica"></span></h4>
+                                                                            <i class="fa fa-users"></i><span title="Docente especial de educación física"> Docente especial de educación física</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-12" ng-show="stats.docArtistica >= 0">
+                                                                        <div class="alert alert-warning alrt">
+                                                                            <h4><span ng-bind="stats.docArtistica"></span></h4>
+                                                                            <i class="fa fa-users"></i><span title="Docente especial de educación artística"> Docente especial de educación artística</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-12" ng-show="stats.doctecnologias >= 0">
+                                                                        <div class="alert alert-success alrt">
+                                                                            <h4><span ng-bind="stats.doctecnologias"></span></h4>
+                                                                            <i class="fa fa-users"></i><span title="Docente especial de educación en tecnologías"> Docente especial de educación en tecnologías</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-12" ng-show="stats.docIdiomas >= 0">
+                                                                        <div class="alert alert-info alrt">
+                                                                            <h4><span ng-bind="stats.docIdiomas"></span></h4>
+                                                                            <i class="fa fa-users"></i><span title="Docente especial de idiomas"> Docente especial de idiomas</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-12" ng-show="stats.laborat >= 0">
+                                                                        <div class="alert alert-warning alrt">
+                                                                            <h4><span ng-bind="stats.laborat"></span></h4>
+                                                                            <i class="fa fa-users"></i><span title="No. de laboratorios"> No. de laboratorios</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-12" ng-show="stats.taller >= 0">
+                                                                        <div class="alert alert-success alrt">
+                                                                            <h4><span ng-bind="stats.taller"></span></h4>
+                                                                            <i class="fa fa-users"></i><span title="No. de talleres"> No. de talleres</span> 
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div>
+                                                                <div class="row mt-5">
+                                                                    <div class="column">
+                                                                        <p class="titulo_subtexto" title="Estadísticas por grado">Cifras por grado
+                                                                        </p>
+                                                                        <hr class="red" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row align-items-center">
+                                                                    <div class="column col-lg-4 col-md-12"
+                                                                        ng-show="stats.alumprimero != 0 && stats.aulasprimero !== undefined"
+                                                                        title="Alumnos en primero">Alumnos en primero
+                                                                        <div class="progress">
+                                                                            <div class="progress-bar progress-bar-striped"
+                                                                                role="progressbar"
+                                                                                aria-valuenow=" {{totalesAlum1}}"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="min-width: 2em; width: {{totalesAlum1}}%">
+                                                                                <span ng-bind="stats.alumprimero"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4 col-md-12"
+                                                                        ng-show="stats.alumsegundo != 0 && stats.alumsegundo !== undefined"
+                                                                        title="Alumnos en segundo">Alumnos en segundo
+                                                                        <div class="progress ">
+                                                                            <div class="progress-bar progress-bar-striped"
+                                                                                role="progressbar"
+                                                                                aria-valuenow=" {{totalesAlum2}}"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="min-width: 2em; width: {{totalesAlum2}}%">
+                                                                                <span ng-bind="stats.alumsegundo"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4 col-md-12"
+                                                                        ng-show="stats.alumtercero != 0 && stats.alumtercero !== undefined"
+                                                                        title="Alumnos en tercero">Alumnos en tercero
+                                                                        <div class="progress">
+                                                                            <div class="progress-bar progress-bar-striped"
+                                                                                role="progressbar"
+                                                                                aria-valuenow=" {{totalesAlum3}}"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="min-width: 2em; width: {{totalesAlum3}}%">
+                                                                                <span ng-bind="stats.alumtercero"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4 col-md-12"
+                                                                        ng-show="stats.alumcuarto != 0  && stats.alumcuarto !== undefined"
+                                                                        title="Alumnos en cuarto">Alumnos en cuarto
+                                                                        <div class="progress ">
+                                                                            <div class="progress-bar progress-bar-striped"
+                                                                                role="progressbar"
+                                                                                aria-valuenow="{{totalesAlum4}}"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="min-width: 2em; width: {{totalesAlum4}}%">
+                                                                                <span ng-bind="stats.alumcuarto"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4 col-md-12"
+                                                                        ng-show="stats.alumquinto != 0  && stats.alumquinto !== undefined"
+                                                                        title="Alumnos en quinto">Alumnos en quinto
+                                                                        <div class="progress ">
+                                                                            <div class="progress-bar progress-bar-striped"
+                                                                                role="progressbar"
+                                                                                aria-valuenow="{{totalesAlum5}}"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="min-width: 2em; width: {{totalesAlum5}}%">
+                                                                                <span ng-bind="stats.alumquinto"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4 col-md-12"
+                                                                        ng-show="stats.alumsexto != 0 && stats.alumsexto !== undefined"
+                                                                        title="Alumnos en sexto">Alumnos en sexto
+                                                                        <div class="progress ">
+                                                                            <div class="progress-bar progress-bar-striped"
+                                                                                role="progressbar"
+                                                                                aria-valuenow=" {{totalesAlum6}}"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="min-width: 2em; width: {{totalesAlum6}}%">
+                                                                                <span ng-bind="stats.alumsexto"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row align-items-center">
+                                                                    <div class="column col-lg-4" ng-show="stats.aulasprimero != 0 && stats.aulasprimero !== undefined">
+                                                                        <div class="alert alert-info alrt">
+                                                                            <h4><span ng-bind="stats.aulasprimero"></span></h4>
+                                                                            <i class="fa fa-university"></i> <span title="Aulas de primero"> Aulas de primero</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-show="stats.aulassegundo != 0 && stats.aulassegundo !== undefined">
+                                                                        <div class="alert alert-warning alrt">
+                                                                            <h4><span ng-bind="stats.aulassegundo"></span></h4>
+                                                                            <i class="fa fa-university"></i> <span title="Aulas de segundo"> Aulas de segundo</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-show="stats.aulastercero != 0 && stats.aulastercero !== undefined">
+                                                                        <div class="alert alert-success alrt">
+                                                                            <h4><span ng-bind="stats.aulastercero"></span></h4>
+                                                                            <i class="fa fa-university"></i> <span title="Aulas de tercero"> Aulas de tercero</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-show="stats.aulascuarto != 0 && stats.aulascuarto !== undefined">
+                                                                        <div class="alert alert-info alrt">
+                                                                            <h4><span ng-bind="stats.aulascuarto"></span></h4>
+                                                                            <i class="fa fa-university"></i> <span title="Aulas de cuarto"> Aulas de cuarto</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-show="stats.aulasquinto != 0 && stats.aulasquinto !== undefined">
+                                                                        <div class="alert alert-info alrt">
+                                                                            <h4><span ng-bind="stats.aulasquinto"></span></h4>
+                                                                            <i class="fa fa-university"></i> <span title="Aulas de quinto"> Aulas de quinto</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="column col-lg-4" ng-show="stats.aulassexto != 0 && stats.aulassexto !== undefined">
+                                                                        <div class="alert alert-info alrt">
+                                                                            <h4><span ng-bind="stats.aulassexto"></span></h4>
+                                                                            <i class="fa fa-university"></i> <span title="Aulas de sexto"> Aulas de sexto</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> 
+
+                                            <!--Panel para mostrar docentes de la escuela-->
+                                            <div class="panel-group ficha-collapse col-12" id="accordionDocentes" style="display:none;">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title" title="Docentes">
+                                                            <a data-parent="#accordionDocentes" data-bs-toggle="collapse" href="#panel-05" aria-expanded="true" aria-controls="panel-05">
+                                                                Docentes<sup>(4)</sup>
+                                                            </a>
+                                                        </h4>
+                                                        <button type="button" class="collpase-button collapsed" data-parent="#accordionDocentes" data-bs-toggle="collapse" href="#panel-05"></button>
+                                                    </div>
+                                                    <div class="panel-collapse collapse" id="panel-05">
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="column col-md-12">
+                                                                    <table class="table table-responsive" id="tblTeachers">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th title="Nombre del Docente">Nombre del Docente</th>
+                                                                                <th title="Categoría">Categoría</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody ng-repeat="docente in docentes">
+                                                                            <tr>
+                                                                                <td><span ng-bind="docente.nombre"></span></td>
+                                                                                <td><span ng-bind="docente.categoria"></span>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--Panel para mostrar plazas vacantes de la escuela-->
+                                            <div class="panel-group ficha-collapse col-12" id="accordionPlazas" style="display:none;">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title" title="Plazas">
+                                                            <a data-parent="#accordionPlazas" data-bs-toggle="collapse" href="#panel-06" aria-expanded="true" aria-controls="panel-06">
+                                                                Plazas vacantes<sup>(4)</sup>
+                                                            </a>
+                                                        </h4>
+                                                        <button type="button" class="collpase-button collapsed" data-parent="#accordionPlazas" data-bs-toggle="collapse" href="#panel-06"></button>
+                                                    </div>
+                                                    <div class="panel-collapse collapse" id="panel-06">
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="column col-md-12">
+                                                                    <table class="table table-responsive">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th title="Clave">Clave</th>
+                                                                                <th title="Categoría">Categoría</th>
+                                                                                <th title="Estatus">Estatus</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody ng-repeat="plaza in plazas">
+                                                                            <tr>
+                                                                                <td><span ng-bind="plaza.codigoPlaza"></span>
+                                                                                </td>
+                                                                                <td><span ng-bind="plaza.tipoPlaza"></span>
+                                                                                </td>
+                                                                                <td><span ng-bind="plaza.estatusPlaza"></span>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Fuentes de la información-->
+                                        <div class="row">
+                                            <div class="column col-12">
+                                                <small>
+                                                    <p title="Fuente de información"><b>Fuente de información:</b></p>
+                                                    <p title="La información exhibida en esta sección es proporcionada directamente por la Autoridad Educativa Local">La información exhibida en esta sección es proporcionada directamente por la Autoridad Educativa Local.</p>
+                                                    <p title="Catálogo Nacional de Centros de Trabajo">(1) Catálogo Nacional de Centros de Trabajo</p>
+                                                    <p ng-if="ctImagen.imagen">(2) Censo de Escuelas, Maestros y Alumnos de Educación Básica y Especial - CEMABE, <b>2013</b></p>
+                                                    <p ng-if="stats && stats != null && stats !== undefined">(3) Cuestionarios del formato 911, Fuente <b><span ng-bind="stats.fuente"></span></b></p>
+                                                    <p
+                                                        ng-if="plazas !== undefined || plazas != null || fuentePlazaCCT != null || fuentePlazaCCT !== undefined || docentes !== undefined || docentes != null">
+                                                        (4) <span ng-bind="fuentePlazaCCT.fuenteNominaCct"></span>,
+                                                        Quincena
+                                                        <b><span ng-bind="fuentePlazaCCT.quincena"></span></b>,
+                                                        Ciclo Escolar <b>
+                                                            <span ng-bind="fuentePlazaCCT.ciclo"></span></b>
+                                                    </p>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Calendario escolar-->
+                                <div id="nav-02" class="tab-pane fade" role="tabpanel" aria-labelledby="nav-tab-02">
+                                    <div class="panel-group ficha-collapse col-12" id="accordionCalendario">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="Calendario escolar">
+                                                    <a data-parent="#accordionCalendario" data-bs-toggle="collapse" href="#panel-07" aria-expanded="true" aria-controls="panel-07">
+                                                        Calendario escolar 2024-2025 de 190 días para Educación Básica
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionCalendario" data-bs-toggle="collapse" href="#panel-07"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-07">
+                                                <div class="panel-body">
+                                                        <div align="center">
+                                                            <p class="title-calendar" title="Vigente para las escuelas públicas y particulares incorporadas al Sistema Educativo Nacional en los Estados Unidos Mexicanos que cumplan con los requisitos que se establecen en los lineamientos correspondientes.">Vigente para las escuelas públicas y particulares incorporadas al Sistema Educativo Nacional en los Estados Unidos Mexicanos que cumplan con los requisitos que se establecen en los lineamientos correspondientes.</p>
+
+                                                            <div class="row">
+                                                                <div class="column col-12 mt-5 mb-5">
+                                                                    <!--AQUI VA CALENDARIO DOS-->
+                                                                    <div id="calendar190"></div>
+                                                                </div>                                                                
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Inicio de clases del ciclo escolar 2024-2025">
+                                                                        <span class="color33-calendar">..</span>Inicio de clases del ciclo Escolar 2024-2025<span ng-bind=""></span>
+                                                                            <!-- class="color1-calendar">.</span><span ng-bind="lengua.frase664"></span> -->
+                                                                    </p>
+                                                                </div>
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Consejo Técnico Escolar Fase Intensiva">
+                                                                        <span  class="color41-calendar">..</span>Consejo Técnico Escolar Fase Intensiva<span ng-bind=""></span>
+                                                                            <!-- class="color2-calendar">.</span><span ng-bind="lengua.frase1053"></span> -->
+                                                                    </p>
+                                                                </div>
+                                                                
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Taller Intensivo para Personal con Funciones de Dirección">
+                                                                        <span class="color4-calendar">..</span>Taller Intensivo para Personal con Funciones de Dirección<span ng-bind=""></span>
+                                                                            <!-- class="color3-calendar">.</span><span ng-bind="lengua.texto129"></span>: <strong>2023-2024</strong> -->
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Fin de clases del ciclo escolar 2024-2025">
+                                                                        <span class="color33-calendar">..</span>Fin de clases del ciclo escolar 2024-2025<span ng-bind=""></span>
+                                                                            <!-- class="color4-calendar">.</span><span ng-bind="lengua.frase881"></span> -->
+                                                                    </p>
+                                                                </div>
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Consejo Técnico Escolar Sesión Ordinaria">
+                                                                        <span class="color42-calendar">..</span>Consejo Técnico Escolar Sesión Ordinaria<span ng-bind=""></span>
+                                                                            <!-- class="color5-calendar">.</span><span ng-bind="lengua.frase739"></span> -->
+                                                                    </p>
+                                                                </div>
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Taller Intensivo para Personal Docente">
+                                                                        <span class="color39-calendar">..</span>Taller Intensivo para Personal Docente<span ng-bind=""></span>
+                                                                            <!-- class="color5-calendar">.</span><span ng-bind="lengua.frase889"></span> 2022-2023 -->
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Suspensión de labores docentes">
+                                                                        <span class="color33-calendar">..</span>Suspensión de labores docentes<span ng-bind=""></span>
+                                                                            <!-- class="color7-calendar">.</span><span ng-bind="lengua.frase193"></span> y <span ng-bind="lengua.texto180"></span> * -->
+                                                                    </p>
+                                                                </div>
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Entrega de boletas de evaluación a madres, padres o tutores">
+                                                                        <span class="color33-calendar">..</span>Entrega de boletas de evaluación a madres, padres o tutores<span ng-bind=""></span>
+                                                                            <!-- class="color4-calendar">.</span><span ng-bind="lengua.frase888"></span> -->
+                                                                    </p>
+                                                                </div>
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Preeinscripción a preescolar, primer grado de primaria y primer grado de secundaria para el ciclo escolar 2025-2026"><span
+                                                                            class="color37-calendar">..</span>Preeinscripción a preescolar, primer grado de primaria y primer grado de secundaria para el ciclo escolar 2025-2026<span ng-bind=""></span>
+                                                                            <!-- class="color8-calendar">.</span><span ng-bind="lengua.frase1054"></span> -->
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar"
+                                                                        title="Receso de clases">
+                                                                        <span class="color35-calendar">..</span>Receso de clases<span ng-bind=''></span>
+                                                                            <!-- class="color5-calendar">.</span><span ng-bind='lengua.frase420'></span> -->
+                                                                        2022-2023
+                                                                    </p>
+                                                                </div>
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Vacaciones">
+                                                                        <span class="color36-calendar">..</span>Vacaciones<span ng-bind=""></span>
+                                                                            <!-- class="color5-calendar">.</span><span ng-bind="lengua.texto81"></span> -->
+                                                                    </p>
+                                                                </div>
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar" title="Registro de calificaciones">
+                                                                        <span class="color40-calendar">..</span>Registro de calificaciones<span ng-bind=""></span>
+                                                                            <!-- class="color19-calendar"></span>* <span ng-bind="lengua.texto183"></span> -->
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar"
+                                                                        title="Sesión de Comité Participativo de Salud Escolar y Jornadas de Limpieza en la Escuela">
+                                                                        <span class="color34-calendar">.</span>Sesión de Comité Participativo de Salud Escolar y Jornadas de Limpieza en la Escuela<span ng-bind=""></span>
+                                                                            <!-- class="color9-calendar">.</span><span ng-bind="lengua.texto180"></span> -->
+                                                                    </p>
+                                                                </div>
+                                                                <div class="column col-lg-4">
+                                                                    <p class="letter-calendar"
+                                                                        title="Reflexión de Días Conmemorativos">
+                                                                        <span class="color33-calendar">.</span>Reflexión de Días Conmemorativos<span ng-bind=""></span>
+                                                                            <!-- class="color9-calendar">.</span><span ng-bind="lengua.texto180"></span> -->
+                                                                    </p>
+                                                                </div>
+
+                                                                <!-- <div class="col-md-4">
+                                                                    <p class="letter-calendar"
+                                                                        title="VACACIONES"><span
+                                                                            class="color10-calendar">.</span><span ng-bind="lengua.frase801"></span>
+                                                                    </p>
+                                                                </div> -->
+                                                            </div>
+                                                                
+                                                            <br>
+
+                                                            <center><img src="images/logos/logo_sep_c.html"
+                                                                    class="img-responsive" height="50%"
+                                                                    width="30%">
+                                                            </center><br>
+                                                        </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Contenido INIFED 2013-2018-->
+                                <div id="nav-03" class="tab-pane fade" role="tabpanel" aria-labelledby="nav-tab-03"
+                                    ng-show="inifed != null && inifed !== undefined">
+                                    <h5 title="Instituto Nacional de la Infraestructura Física Educativa">Instituto Nacional de la Infraestructura Física Educativa 2013 - 2018 (histórico)</h5>
+                                    <!--Panel para datos generales-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionGenerales">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="Generales">
+                                                    <a data-parent="#accordionGenerales" data-bs-toggle="collapse" href="#panel-08" aria-expanded="true" aria-controls="panel-08">
+                                                        Generales
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionGenerales" data-bs-toggle="collapse" href="#panel-08"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-08">
+                                                <div class="panel-body">
+
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Año de levantamiento de datos">Año de levantamiento de datos:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.ANIO)}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Ámbito geográfico">Ámbito geográfico:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{inifed.AMBITO}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8">Nivel educativo:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{inifed.NIVEL}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Año de creación">Año de creación:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{inifed.ANIO_CREACION}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Antigüedad">Antigüedad:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{inifed.ANTIGUEDAD}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Panel para Infraestructura de servicios de agua-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionInfraAgua">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="InfraAgua">
+                                                    <a data-parent="#accordionInfraAgua" data-bs-toggle="collapse" href="#panel-09" aria-expanded="true" aria-controls="panel-09">
+                                                        Infraestructura de servicios de agua
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionInfraAgua" data-bs-toggle="collapse" href="#panel-09"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-09">
+                                                <div class="panel-body">
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Tipo de alimentación de agua">Tipo de alimentación de agua:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.ALIMENTACION_AGUA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Bebederos">Bebederos:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.BEBEDEROS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Tipo de descargas de aguas residuales">Tipo de descargas de aguas residuales:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.DESCARGA_AGUA_RESIDUAL)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Panel para Infraestructura eléctrica y de comunicaciones-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionInfraElecCom">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="InfraElecCom">
+                                                    <a data-parent="#accordionInfraElecCom" data-bs-toggle="collapse" href="#panel-10" aria-expanded="true" aria-controls="panel-10">
+                                                        Infraestructura eléctrica y de comunicaciones
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionInfraElecCom" data-bs-toggle="collapse" href="#panel-10"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-10">
+                                                <div class="panel-body">
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Energía eléctrica">Energía eléctrica:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.CON_LUZ)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Telefonía fija">Telefonía fija:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.TELEFONIA_FIJA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Conexión a internet">Conexión a internet:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.INTERNET)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Panel para Infraestructura inmobiliaria-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionInfraInmob">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="InfraInmob">
+                                                    <a data-parent="#accordionInfraInmob" data-bs-toggle="collapse" href="#panel-11" aria-expanded="true" aria-controls="panel-11">
+                                                        Infraestructura inmobiliaria
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionInfraInmob" data-bs-toggle="collapse" href="#panel-11"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-11">
+                                                <div class="panel-body">
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Distribución de planteles según el nivel de accesibilidad">Distribución de planteles según el nivel de accesibilidad:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.NIVEL_ACCESIBILIDAD)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Promedio de alumnas por WC">Promedio de alumnas por WC:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.WC_ALUMNAS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Promedio de alumnos por WC">Promedio de alumnos por WC:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.WC_ALUMNOS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Promedio de personas con discapacidad por WC">Promedio de personas con discapacidad por WC:
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.WC_DISCAPACITADOS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Promedio de personal docente por WC">Promedio de personal docente por WC:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.WC_DOCENTES)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Condiciones físicas de los sanitarios">Condiciones físicas de los sanitarios:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.CONDICION_FIS_WC)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Distribución por número de aulas"><!--span ng-bind="lengua.XXX"></span-->Distribución por número de aulas:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.NUM_AULAS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Edificios con estructuras atípicas"><!--span ng-bind="lengua.XXX"></span-->Edificios con estructuras atípicas:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.ESTRUCTURAS_ATIPICAS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Distribución de planteles por numero de edificios">Distribución de planteles por numero de edificios:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.NUM_EDIFICIOS )}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Plantel con plan de protección civil">Plantel con plan de protección civil:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.PLAN_PROTECCION_CIVIL)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Plantel con canchas deportivas">Plantel con canchas deportivas:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.CANCHA_DEPORTIVA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Plantel con cubierta o techumbres exteriores">Plantel con cubierta o techumbres exteriores:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed.CUBIERTA_TECHUMBRE_EXT)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Panel para Mobiliario-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionMobiliario">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="Mobiliario">
+                                                    <a data-parent="#accordionMobiliario" data-bs-toggle="collapse" href="#panel-12" aria-expanded="true" aria-controls="panel-12">
+                                                        Mobiliario
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionMobiliario" data-bs-toggle="collapse" href="#panel-12"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-12">
+                                                <div class="panel-body">
+                                                    <div class="row especial">
+                                                        <div class="column col-md-8" title="Mesas binarias">Mesas binarias:</div>
+                                                        <div class="column col-md-4">
+                                                            <b>{{(inifed.MESA_BINARIA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="column col-md-8" title="Mesas">Mesas:</div>
+                                                        <div class="column col-md-4">
+                                                            <b>{{(inifed.MESA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="column col-md-8" title="Sillas">Sillas:</div>
+                                                        <div class="column col-md-4">
+                                                            <b>{{(inifed.SILLA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="column col-md-8" title="Sillas con paleta">Sillas con paleta:</div>
+                                                        <div class="column col-md-4">
+                                                            <b>{{(inifed.SILLA_PALETA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="column col-md-8" title="Mesas banco">Mesas banco:</div>
+                                                        <div class="column col-md-4">
+                                                            <b>{{(inifed.MESA_BANCO)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="column col-md-8" title="Mesas banco binario">Mesas banco binario:</div>
+                                                        <div class="column col-md-4">
+                                                            <b>{{(inifed.MESA_BANCO_BINARIO)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="column col-md-8" title="Pizarrones">Pizarrones:</div>
+                                                        <div class="column col-md-4">
+                                                            <b>{{(inifed.PIZARRON)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="column col-md-8" title="Computadoras">Computadoras:</div>
+                                                        <div class="column col-md-4">
+                                                            <b>{{(inifed.COMPUTADORA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="column col-md-8" title="Laptops">Laptops:</div>
+                                                        <div class="column col-md-4">
+                                                            <b>{{(inifed.LAPTOP)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fuente" align="left">
+                                        <small>
+                                            <p title="Fuente de información"><b>Fuente de información:</b></p>
+                                            <p title="Instituto Nacional de la Infraestructura Física Educativa">Instituto Nacional de la Infraestructura Física Educativa.</p>
+                                        </small>
+                                    </div>
+                                </div>
+                                <!--Contenido INIFED 2020-2022-->
+                                <div id="nav-04" class="tab-pane fade" role="tabpanel" aria-labelledby="nav-tab-04"
+                                    ng-show="inifed_v2 != null && inifed_v2 !== undefined">
+                                    <h5 title="Instituto Nacional de la Infraestructura Física Educativa 2020 - 2022">Instituto Nacional de la Infraestructura Física Educativa 2020 - 2022</h5>
+                                    <!--Panel para datos generales-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionGenerales">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="Generales">
+                                                    <a data-parent="#accordionGenerales" data-bs-toggle="collapse" href="#panel-13" aria-expanded="true" aria-controls="panel-13">
+                                                        Generales
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionGenerales" data-bs-toggle="collapse" href="#panel-13"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-13">
+                                                <div class="panel-body">
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Año de levantamiento de datos">Año de levantamiento de datos:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.ANIO)}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Ámbito geográfico">Ámbito geográfico:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{inifed_v2.AMBITO}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Nivel educativo">Nivel educativo:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{inifed_v2.NIVEL}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Año de creación">Año de creación:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{inifed_v2.ANIO_CREACION}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8"v title="Antigüedad">Antigüedad:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{inifed_v2.ANTIGUEDAD}}</b><br/><br/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Panel para Infraestructura de servicios de agua-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionInfraAgua">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="InfraAgua">
+                                                    <a data-parent="#accordionInfraAgua" data-bs-toggle="collapse" href="#panel-14" aria-expanded="true" aria-controls="panel-14">
+                                                        Infraestructura de servicios de agua
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionInfraAgua" data-bs-toggle="collapse" href="#panel-14"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-14">
+                                                <div class="panel-body">
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Tipo de alimientación de agua">Tipo de alimientación de agua:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.ALIMENTACION_AGUA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Bebederos">Bebederos:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.BEBEDEROS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Tipo de descargas de aguas residuales">Tipo de descargas de aguas residuales:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.DESCARGA_AGUA_RESIDUAL)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Panel para Infraestructura eléctrica y de comunicaciones-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionInfraElecCom">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="InfraElecCom">
+                                                    <a data-parent="#accordionInfraElecCom" data-bs-toggle="collapse" href="#panel-15" aria-expanded="true" aria-controls="panel-15">
+                                                        Infraestructura eléctrica y de comunicaciones
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionInfraElecCom" data-bs-toggle="collapse" href="#panel-15"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-15">
+                                                <div class="panel-body">
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Energía eléctrica">Energía eléctrica:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.CON_LUZ)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Telefonía fija">Telefonía fija:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.TELEFONIA_FIJA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Conexión a internet">Conexión a internet:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.INTERNET)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Panel para Infraestructura inmobiliaria-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionInfraInmob">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="InfraInmob">
+                                                    <a data-parent="#accordionInfraInmob" data-bs-toggle="collapse" href="#panel-16" aria-expanded="true" aria-controls="panel-16">
+                                                        Infraestructura inmobiliaria
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionInfraInmob" data-bs-toggle="collapse" href="#panel-16"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-16">
+                                                <div class="panel-body">
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Distribución de planteles según el nivel de accesibilidad">Distribución de planteles según el nivel de accesibilidad:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.NIVEL_ACCESIBILIDAD)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Promedio de alumnas por WC">Promedio de alumnas por WC:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.WC_ALUMNAS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Promedio de alumnos por WC">Promedio de alumnos por WC:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.WC_ALUMNOS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8"><span ng-bind="lengua.XXX"></span>Promedio de personas con discapacidad por WC:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.WC_DISCAPACITADOS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Promedio de personal docente por WC">Promedio de personal docente por WC:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.WC_DOCENTES)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Condiciones físicas de los sanitarios">Condiciones físicas de los sanitarios:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.CONDICION_FIS_WC)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Distribución por número de aulas"><!--span ng-bind="lengua.XXX"></span-->Distribución por número de aulas:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.NUM_AULAS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Edificios con estructuras atípicas"><!--span ng-bind="lengua.XXX"></span-->Edificios con estructuras atípicas:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.ESTRUCTURAS_ATIPICAS)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Distribución de planteles por numero de edificios">Distribución de planteles por numero de edificios:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.NUM_EDIFICIOS )}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Plantel con plan de protección civil">Plantel con plan de protección civil:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.PLAN_PROTECCION_CIVIL)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Plantel con canchas deportivas">Plantel con canchas deportivas:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.CANCHA_DEPORTIVA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Plantel con cubierta o techumbres exteriores">Plantel con cubierta o techumbres exteriores:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.CUBIERTA_TECHUMBRE_EXT)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Panel para Mobiliario-->
+                                    <div class="panel-group ficha-collapse col-12" id="accordionMobiliario">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title" title="Mobiliario">
+                                                    <a data-parent="#accordionMobiliario" data-bs-toggle="collapse" href="#panel-17" aria-expanded="true" aria-controls="panel-17">
+                                                        Mobiliario
+                                                    </a>
+                                                </h4>
+                                                <button type="button" class="collpase-button collapsed" data-parent="#accordionMobiliario" data-bs-toggle="collapse" href="#panel-17"></button>
+                                            </div>
+                                            <div class="panel-collapse collapse" id="panel-17">
+                                                <div class="panel-body">
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Mesas binarias">Mesas binarias:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.MESA_BINARIA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Mesas">Mesas:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.MESA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Sillas">Sillas:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.SILLA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Sillas con paleta">Sillas con paleta:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.SILLA_PALETA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Mesas banco">Mesas banco:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.MESA_BANCO)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Mesas banco binario">Mesas banco binario:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.MESA_BANCO_BINARIO)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Pizarrones">Pizarrones:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.PIZARRON)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Computadoras">Computadoras:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.COMPUTADORA)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row especial">
+                                                        <div class="col-md-8" title="Laptops">Laptops:</div>
+                                                        <div class="col-md-4">
+                                                            <b>{{(inifed_v2.LAPTOP)}}</b><br /><br />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fuente" align="left">
+                                        <small>
+                                            <p title="Fuente de información"><b>Fuente de información:</b></p>
+                                            <p title="Instituto Nacional de la Infraestructura Física Educativa">Instituto Nacional de la Infraestructura Física Educativa.</p>
+                                        </small>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" title="Cerrar">Cerrar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <!--Finaliza el código de pantalla modal para mostrar el detalle de la escuela-->
+        <br><br>
+    </main>
+
+
+    <div class="modal" id="modal-loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p class="titulo_subtexto" style="text-align:center" title="Cargando información, por favor espera un momento..."><i class="fa fa-spin fa-spinner"></i>&nbspCargando información, por favor espera un momento...</p>
+                    <div class="row">
+                        <div class="column col-12 tiempo_fuera" style="display:none;">
+                            <div class="alert alert-warning text-left" role="alert" title="La consulta está tardando más de lo normal">La consulta está tardando más de lo normal</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="column col-12">
+                            <button type="button" class="btn btn-primary tiempo_fuera" data-dismiss="modal" onclick="$('.tiempo_fuera').hide()" title="Terminar la consulta">Terminar la consulta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/jquery-3.5.1.min.html"></script>
+    <script src="js/angular.html"></script>
+    <script src="js/angular-resource.html"></script>
+
+    <script src="js/uri.html"></script>
+    <script src="js/escuelas.html"></script>
+
+    <!--Calendario escolar-->
+    <script src="js/calendar/moment.min.html"></script>
+    <script src="js/calendar/fullcalendar.min.html"></script>
+
+    <script src="../../framework-gb.cdn.gob.mx/gm/v3/assets/js/gobmx.js"></script>
+    <script src="../../framework-gb.cdn.gob.mx/gm/accesibilidad/js/gobmx-accesibilidad.min.js"></script>
+
+    <script src="js/jquery.dataTables.html"></script>
+
+    <script type="text/javascript">
+        $(function(){
+          $("#div-sub-navbar").load("sub-navbar_siged.html");
+        });
+    </script> 
+
+</body>
+
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/escuelas.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:19:31 GMT -->
+</html>

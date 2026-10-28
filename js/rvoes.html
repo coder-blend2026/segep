@@ -1,0 +1,221 @@
+var app = angular.module('rvoes', ['ngResource']);
+
+app.controller('rvoesController', ['$scope', '$http', '$window', '$rootScope',
+    function ($scope, $http, $window, $rootScope) {
+        //$scope.primeraBusqueda = 1;
+ 
+        $scope.tipoBusqueda = '';
+        
+        $scope.rvoe = null;
+        $scope.institucion = null;
+        
+        $scope.rvoeDetail = null;
+
+        $rootScope.rvoeSelected = [];
+
+        $scope.saludo = "1249";
+        
+        //Se utiliza para apagar los warnings que se muestran en el navegador cuando la construcción del datatable no encuentra alguna variable en el json.
+        $.fn.dataTable.ext.errMode = 'none';
+
+        //Se utiliza para apagar los warnings que se muestran en el navegador cuando la construcción del datatable no encuentra alguna variable en el json.
+        //$.fn.dataTable.ext.errMode = 'none';
+
+        var addParam = function (queryString, key, values) {
+            console.log('key:'+key);
+            console.log('values:'+values);
+            return queryString += "" + key + "=" + values;
+        };
+
+
+
+        $scope.getURLrvoe = function () {
+            return global_uri + '/escuela/consultaRVOE/';
+        };
+        
+  
+        
+        $scope.getRecordsByPage = function () {
+            return 10;
+        };
+
+        $scope.getConsultaRVOE = function (){
+            
+            console.log('$scope.rvoe:'+$scope.rvoe);
+            console.log('Hola...');
+            console.log('$scope.institucion:'+$scope.institucion);
+            
+            parametros = "";
+
+            if($scope.institucion == null){
+                $scope.institucion = "";
+            }
+
+            if($scope.rvoe == null){
+                $scope.rvoe = "";
+            }
+            parametros = addParam(parametros,'rvoe', $scope.rvoe);
+            parametros = addParam(parametros,'&institucion', $scope.institucion);
+            console.log('Parametros:'+parametros);
+            crearTablaRVOE(parametros);
+        
+        };
+        
+
+        var crearTablaRVOE = function(parametros){
+            //processing();
+            console.log("Antes de construir la tabla");
+            console.log("Parametros:"+parametros);
+            console.log($scope.getURLrvoe() + parametros);
+
+            var table = $('#tabla-rvoes').DataTable({
+                "destroy": true,
+                "language": {"url": "js/datatables/datatable.spanish.lang"},
+                "ajax": {"url": $scope.getURLrvoe() + parametros ,
+                            'beforeSend': function (request) {request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");},
+                            "data": function (data) {processing();},
+                            "dataSrc": function (d) {
+                                                        console.log('regresó');
+                                                        var datosLimpios = [];
+                                                        noprocessing();
+                                                
+                                                        d.forEach(function(valor){
+                                                            datosLimpios.push(valor);
+                                                        });
+
+                                                        if (datosLimpios.length < 1) {
+                                                            $('#sectionResultWithoutData').show();
+                                                            //disableInput();
+                                                            console.log("length menor a cero 1417");
+                                                        }else{
+                                                            $('#sectionResultWithData').show();
+                                                            //disableInput();
+                                                            console.log("Si trae info");
+                                                        }
+
+                                                        //$('html, body').animate({scrollTop: 290}, 1000);
+                                                        return datosLimpios;
+                                                    },
+                        },
+                "columns": [{"name": "Institución", "data": "institucion"},
+                            {"name": "Carrera", "data": "carrera"},
+                            {"name": "Nivel", "data": "nivel"},
+                            {"name": "Entidad", "data": "entidad_federativa"}]
+                            /*{"name": "RVOE", "data": "clave_rvoe"},*/
+                            /*{"name": "Estatus", "data": "estatus_rvoe"}]*/
+            });
+
+ 
+            var table = $('#tabla-rvoes').DataTable();
+
+            $('#textoCamposObligatorios').hide();
+ 
+            $('#tabla-rvoes tbody').unbind('click');
+
+            $('#tabla-rvoes tbody').on('click', 'tr', function () {
+                var rowRvoe = table.row(this).data();
+
+                console.log(rowRvoe.institucion);
+                $scope.showDetails(rowRvoe);
+            });
+
+
+        };
+
+        $scope.showDetails = function (rowRvoe) {
+
+            $('#detalleRvoe p').remove();
+
+            /*
+            $('#detalleRvoe').append(
+                    "<p title=\"Institución\"><b>Institución: </b></p>"
+                    +"<p title=\"Institución\">"+rowRvoe.institucion+"</p>"
+                    +"<p title=\"Nivel\"><b>Nivel: </b></p>"
+                    +"<p title=\"Nivel\">"+rowRvoe.nivel+"</p>"
+                    +"<p title=\"Carrera\"><b>Carrera: </b></p>"
+                    +"<p title=\"Carrera\">"+rowRvoe.carrera+"</p>"
+                    +"<p title=\"Tipo\"><b>Tipo: </b></p>"
+                    +"<p title=\"Tipo\">"+rowRvoe.tipo+"</p>"
+                    +"<p title=\"Entidad Federativa\"><b>Entidad: </b></p>"
+                    +"<p title=\"Entidad Federativa\">"+rowRvoe.entidad_federativa+"</p>"
+                    +"<p title=\"Campus\"><b>Campus: </b></p>"
+                    +"<p title=\"Campus\">"+rowRvoe.campus+"</p>"
+                    +"<p title=\"RVOE\"><b>Clave RVOE: </b></p>"
+                    +"<p title=\"RVOE\">"+rowRvoe.clave_rvoe+"</p>"
+                    +"<p title=\"Estatus\"><b>Estatus: </b></p>"
+                    +"<p title=\"Estatus\">"+rowRvoe.estatus_rvoe+"</p>"
+                    //+"<p title=\"rvoe\"><b>Fecha: </b>"+rowRvoe.fecha_rvoe+"</p>"
+                );*/
+            
+            $('#detalleRvoe').append(
+                    "<p title=\"Institución\"><b>Institución: </b>"+rowRvoe.institucion+"</p>"
+                    +"<p title=\"Nivel\"><b>Nivel: </b>"+rowRvoe.nivel+"</p>"
+                    +"<p title=\"Carrera\"><b>Carrera: </b>"+rowRvoe.carrera+"</p>"
+                    +"<p title=\"Tipo\"><b>Tipo: </b>"+rowRvoe.tipo+"</p>"
+                    +"<p title=\"Entidad Federativa\"><b>Entidad: </b>"+rowRvoe.entidad_federativa+"</p>"
+                    +"<p title=\"Campus\"><b>Campus: </b>"+rowRvoe.campus+"</p>"
+                    +"<p title=\"RVOE\"><b>Clave RVOE: </b>"+rowRvoe.clave_rvoe+"</p>"
+                    //+"<p title=\"rvoe\"><b>Fecha: </b>"+rowRvoe.fecha_rvoe+"</p>"
+                    +"<p title=\"Estatus\"><b>Estatus: </b>"+rowRvoe.estatus_rvoe+"</p>"
+                );
+
+            $("#modal_rvoes").modal('show');
+          
+        };
+
+
+        var processing = function () {
+            $("#modal-loading").modal('show');
+            $('.tiempo_fuera').hide();
+            setTimeout(revisaModal, 10000);
+            console.log("processing - rvoe");
+
+        };
+        
+        
+        var noprocessing = function () {
+            $("#modal-loading").modal('hide');
+        };
+        var disableInput = function () {
+            document.getElementById('searchRvoe').disabled = true;
+            document.getElementById('searchInst').disabled = true;
+        };
+        var enableInput = function () {
+            document.getElementById('searchRvoe').disabled = false;
+            document.getElementById('searchInst').disabled = false;
+        }
+            
+        
+        var revisaModal = function () {
+            /*if (($("#modal-loading").data('bs.modal') || {}).isShown) {*/
+            if($("#modal-loading").is(":visible")){
+                $('.tiempo_fuera').show();
+            }
+        };
+
+        $scope.newSearch = function () {
+            enableInput ();
+            $scope.rvoe = null;
+            $scope.institucion = null;
+            $('#sectionResultWithData').hide();
+            $('#sectionResultWithoutData').hide();
+            $("#sectionResultWithoutData").modal('hide');
+            
+            $("#modal-loading").modal('hide');
+            $scope.resetForm();
+            
+        };
+
+        /*$scope.newSearch = function () {
+            $('#sectionResultWithData').hide();
+            $('#sectionResultWithoutData').hide();
+            $('#textoCamposObligatorios').show();
+
+
+            $scope.saludo = "Hola modificado newSearch 1255";
+            console.log("Hola desde newSearch 19082024:"+$scope.saludo);
+
+        };*/
+
+    }]
+);

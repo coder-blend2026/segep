@@ -1,0 +1,16 @@
+.option-docente{
+	background-image: url("../images/docente.html");
+	border-radius: 10px;
+	padding: 0px;
+	background-position: center;
+	background-repeat: no-repeat; /* Do not repeat the image */
+  	background-size: 100% 100%; /* Resize the background image to cover the entire container */
+  	cursor:pointer;
+	display: inline-block;
+	width: 100%;
+	height: 20vh;
+	white-space: normal;
+	-webkit-text-size-adjust: auto;
+	font-size: 0.6875em; /* 0.5625em 0.625em 0.6875em 0.75em	*/
+	text-size-adjust: 90%;
+}

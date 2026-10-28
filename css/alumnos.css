@@ -1,0 +1,90 @@
+.img-background {
+	display: block;
+	width: 100%;
+	height: auto;
+	max-height: 320px;
+	object-fit: cover;
+	margin-top: 0px !important;
+	background: #e8eef2;
+}
+
+.container-top{
+/*
+	position: relative;
+	z-index: 5000;
+*/
+	/*border: 5px solid pink;*/
+	margin-top: -250px;
+}
+
+.card {
+	max-width: 250px;
+}
+
+.card-body{
+	text-align: center;
+}
+.card-fuente-info{
+	font-size: 11px;
+	text-align: justify;
+	margin:0px;
+	/*font-weight: bold;*/
+}
+
+@media screen and (max-width: 991px){
+    .card-center {
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10px;
+		margin-bottom: 10px;
+    }
+}
+
+.container-form {
+	border: 2px solid #BC955C;
+	padding: 20px;
+	border-radius: 10px;
+}
+
+.btn-width{
+	width: 100%!important;
+}
+
+.con-borde{
+	border: 4px solid orange;
+}
+
+.link-color{
+	color:#BC955C;
+	display: flex;
+	justify-content: center;
+}
+
+.alert-info-alumno{
+	/*margin-top:-6vh;
+	margin-bottom:25px;*/
+	text-align: justify;
+}
+
+.text-bold{
+	font-weight:bold;
+}
+
+.dato-ciclo{
+	 height:70px;
+	 max-width: 150px;
+	 padding: 10px;
+	 font-size: 16px;
+	 margin:3px;
+}
+
+.table-calificaciones{
+	font-size: 14px;
+	width:max-content !important;
+	margin:auto;
+	border: solid 1px #ddd;
+}
+
+.table-calificaciones>thead>tr th:not(:first-child),.table-calificaciones>tbody>tr td:not(:first-child){
+  text-align: center;
+}

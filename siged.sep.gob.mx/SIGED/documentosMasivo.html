@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/documentosMasivo.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:21:45 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEP | SIGED</title>
+    <link href="../../framework-gb.cdn.gob.mx/gm/v3/assets/styles/main.css" rel="stylesheet">
+    <link href="https://framework-gb.cdn.gob.mx/gm/v3/assets/images/favicon.ico" rel="shortcut icon">
+    <link href="../../framework-gb.cdn.gob.mx/gm/accesibilidad/css/gobmx-accesibilidad.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/navbar-settings.css"> 
+    <link rel="stylesheet" type="text/css" href="css/global_siged.css">
+    <link rel="stylesheet" type="text/css" href="css/documentosMasivo.css">
+
+    <link href="css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body ng-app="documentos">
+    <div id="div-sub-navbar"></div>
+
+    <div>
+        <img class="img-background" src="images/bnr_documentos.html">
+    </div>
+
+    <div class="container container-top">
+        <div class="row align-items-center">
+            <div class="column col-lg-12">
+                <h3>Sistema de Información y Gestión Educativa</h3>
+                <h2 class="mt-1">Validación de documentos académicos electrónicos</h2>
+            </div>
+        </div><br>
+    </div>
+
+    <div class="container bc_title" style="margin-bottom: -5vh">
+        <div class="row">
+            <div class="col-sm-8">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index-2.html">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="index-2.html#consultas">Consultas</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="#">Documentos académicos electrónicos</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <main id="search" ng-controller="documentosController">
+        <div class="container container-form mt-5" >
+            <div class="row">
+                <div class="colum col-12">
+                    <p><span>Revisa los instrumentos para realizar la consulta masiva de folios:</span></p>
+                </div>
+                <div class="column col-lg-12 ml-5">
+                    <label title="Manual para el llenado del formato">
+                        <a target="_blank" href="archivos/ManualConsultaMasivaDocumentos.pdf" class="btn-link link-color" title="Manual para el llenado del formato">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            <span>Manual para el llenado del formato</span>
+                        </a>
+                    </label>
+                </div>
+                <div class="column col-lg-12 ml-5">
+                    <label title="Descargar formato">
+                        <a target="_blank" href="archivos/LayoutConsulta.html" class="btn-link link-color" title="Descargar formato">
+                            <i class="bi bi-file-earmark-excel"></i>
+                            <span>Formato para consulta de folios</span>
+                        </a>
+                    </label>
+                </div>
+            </div>
+            <form class="form mt-3" ng-submit="getConsultaPorArchivo(myVar);">
+                <div class="row">
+                    <div class="colum  col-12">
+                        <p><span>Carga el formato con los folios que deseas consultar.</span></p>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="colum col-lg-6">
+                        <div class="form-group mb-0">
+                            <input id="folios" name="folios" type="file" class="form-control mb-0"
+                                ng-model="folio" placeholder="Folios sep"
+                                accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                required>
+                            <input type="checkbox" name="useworker" style="display:none">
+                            <input type="checkbox" name="userabs" checked style="display:none">
+
+                        </div>
+                    </div>
+                    <div class="column col-lg-3">
+                        <button id="btn-buscar" type="submit" class="btn btn-active btn-width mt-2">Buscar</button>                        
+                    </div>
+                    <div class="column col-lg-3">
+                        <button id="btn-restablecer" type="reset"  class="btn btn-secondary active btn-width mt-2"
+                            ng-click="newSearch()">Restablecer</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="container" id="divResultsWithoutData">
+            <section id="sectionResultWithoutData" style="display:none;">
+                <div data-role="page" >
+                    <div class="top-buffer-submenu">
+                        <h4 title="Información no encontrada">Información no encontrada</h4>
+                        <hr class="red">
+                        <section style="margin: 20px;">
+                            <div class="alert alert-danger" >
+                                <p title="La información solicitada no se encuentra en nuestros registros"><b>La información solicitada no se encuentra en nuestros registros.</b></p>
+                                <br>
+                                <p title="Verifica los datos que ingresaste y vuelve a intentarlo.">Verifica los datos que ingresaste y vuelve a intentarlo.</p>
+                                <br>
+                                <button class="btn btn-danger bnt-nvo-intento" type="reset" ng-click="newSearch()" onclick="$('html,body').scrollTop(0);" title="Volver a intentarlo">Volver a intentarlo</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+            <section id="sectionErrorWhileConnecting" style="display:none;">
+                <div data-role="page" >
+                    <div class="top-buffer-submenu">
+                        <h4><span>No es posible mostrar el resultado de la búsqueda</span></h4>
+                        <hr class="red">
+                        <section style="margin: 20px;">
+                            <div class="alert alert-danger">
+                                <p><b><span></span>Ocurrió un error mientras se realizaba la consulta</b></p>
+                                <br>
+                                <p><span>Verifica la conexión a internet y vuelve a intentarlo</span></p>
+                                <br>
+                                <button class="btn btn-danger bnt-nvo-intento" type="reset" ng-click="newSearch()" onclick="$('html,body').scrollTop(0);" title="Volver a intentarlo">"Volver a intentarlo</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+       <div class="container" id="divResultsWithData">
+            <section ng-show="resultados == null">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <p><i class="bi bi-info-circle"></i> <span>Los certificados estarán disponibles para su consulta un día después de su emisión.</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="sectionResultWithData" style="display:none;">
+                <div class="container mb-5">
+                    <div class="row justify-content-end">
+                        <div class="column mb-3">
+                            <button id="btn-concentrado" type="button" ng-click="generaExcel()" class="btn pull-right button-excel" title="Obtener concentrado"><i class="bi bi-file-earmark-excel-fill"></i>&nbspObtener concentrado</button>
+                        </div>
+
+                        <div class="column col-md-12">
+                            <table id="tabla-documentos" class="display nowrap tabla-documentos">
+                                <thead class="header-order">
+                                    <tr>
+                                        <th title="Folio">Folio</th>
+                                        <th title="Nombre">Nombre</th>
+                                        <th title="Promedio">Promedio</th>
+                                        <th title="Institución">Institución</th>
+                                        <th title="Entidad">Entidad</th>
+                                        <th title="Fecha emisión">Fecha emisión</th>
+                                        <th title="Fecha sello">Fecha sello</th>
+                                        <th title="Estatus">Estatus</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table> 
+                        </div>
+                    </div>
+
+                    <div id="informacion">
+                        <div class="alert alert-info alert-info-certificado">
+                        <p><span title="La información de los certificados que se muestran en este portal, son el resultado de la integración de información que envían las autoridades educativas de los estados y la Ciudad de México. -En caso de que la información presentada no coincida con tus resultados obtenidos en el ciclo escolar o no esté disponible, por favor ponte en contacto con la autoridad de tu centro escolar."><b>¡Atención!</b>&nbsp;La información de los certificados que se muestran en este portal, es el resultado de la integración de información que envían las autoridades educativas de los estados y de la Ciudad de México. En caso de que la información presentada no coincida con tu documento o no esté disponible, por favor ponte en contacto con la autoridad de tu centro escolar.</span></p>
+                        <p><span title="La información presentada es de carácter informativa y para verificar la validez del documento impreso. Es una representación de la información contenida en el certificado (documento impreso).">La información presentada es de carácter informativa y para verificación del documento impreso.</span>&nbsp;<span title="El documento oficial es el que se entrega a los padres o tutores de los educandos en sus centros escolares">El documento oficial es el que se entrega a los padres o tutores de los educandos en sus centros escolares.</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>    
+        </div>
+
+        <br><br>
+    </main>
+
+
+    <div class="modal" id="modal-loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4 style="text-align:center" title="Cargando información, por favor espera un momento..."><i class="fa fa-spin fa-spinner"></i>&nbspCargando información, por favor espera un momento...</h4>
+                    <div class="row">
+                        <div class="column col-12 tiempo_fuera" style="display:none;">
+                            <div class="alert alert-warning text-left" role="alert" title="La consulta está tardando más de lo normal">La consulta está tardando más de lo normal</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="column col-12">
+                            <button type="button" class="btn btn-primary tiempo_fuera" data-dismiss="modal" onclick="$('.tiempo_fuera').hide()" title="Terminar la consulta">Terminar la consulta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <main id="modal_folio">
+        <div class="modal fade" id="modalfolioError">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><span>Error en la carga de información</span></h4>
+                    </div>
+                    <div id="bodyfolioError" class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span>Cerrar</span> </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </main>
+
+
+
+
+
+    <script src="js/jquery-3.5.1.min.html"></script>
+    <script src="js/angular.html"></script>
+    <script src="js/angular-resource.html"></script>
+
+    <script src="js/uri.html"></script>
+    <script src="js/documentosMasivo.html"></script>
+
+    <script src="../../framework-gb.cdn.gob.mx/gm/v3/assets/js/gobmx.js"></script>
+    <script src="../../framework-gb.cdn.gob.mx/gm/accesibilidad/js/gobmx-accesibilidad.min.js"></script>
+
+    <script src="js/jquery.dataTables.html"></script>
+
+    <script src="js/xlsx/jszip.html"></script>
+    <script src="js/xlsx/xlsx.html"></script>
+
+    <script>
+        var outputExcel; //variable global para leer información de excel
+    </script>
+
+    <script src="js/xlsx/decodeXLSX.html"></script>
+
+    <script type="text/javascript">
+        $(function(){
+          $("#div-sub-navbar").load("sub-navbar_siged.html");
+        });
+    </script> 
+
+</body>
+
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/documentosMasivo.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:21:53 GMT -->
+</html>

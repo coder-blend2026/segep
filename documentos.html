@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/documentos.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:19:02 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEP | SIGED</title>
+    <link href="../../framework-gb.cdn.gob.mx/gm/v3/assets/styles/main.css" rel="stylesheet">
+    <link href="https://framework-gb.cdn.gob.mx/gm/v3/assets/images/favicon.ico" rel="shortcut icon">
+    <link href="../../framework-gb.cdn.gob.mx/gm/accesibilidad/css/gobmx-accesibilidad.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/navbar-settings.css">   
+    <link rel="stylesheet" type="text/css" href="css/global_siged.css"> 
+    <link rel="stylesheet" type="text/css" href="css/documentos.css">
+</head>
+
+<body ng-app="documentos">
+    <div id="div-sub-navbar"></div>
+
+    <div>
+        <img class="img-background" src="images/bnr_documentos.html">
+    </div>
+
+    <div class="container container-top">
+        <div class="row align-items-center">
+            <div class="column col-lg-12">
+                <h3>Sistema de Información y Gestión Educativa</h3>
+                <h2 class="mt-1">Validación de documentos académicos electrónicos</h2>
+            </div>
+        </div><br><br>
+    </div>
+
+    <div class="container bc_title" style="margin-top: 0vh; margin-bottom: -3vh">
+            <div class="row">
+                <div class="col-sm-8">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index-2.html">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="index-2.html#consultas">Consultas</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><a href="#">Documentos académicos electrónicos</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>  
+    <br>
+    <main id="search" ng-controller="documentosController">
+
+        <div class="container container-form mt-2" >
+            <form class="form" ng-submit="getConsultaByFOLIO(myVar);">
+                <div class="row">
+                    <div class="column col-lg-6">
+                      <div class="form-group  mb-2">
+                        <label for="folio" class="sr-only">Folio</label>
+                        <input id="folio" type="text" placeholder="Ingrese el folio"
+                                class="form-control mt-3"
+                                
+                                required
+                                ng-model="folio" >
+                      </div>
+                    </div>
+                    <div class="column col-lg-3 col-md-6 col-sm-6">
+                        <button id="btn-buscar" type="submit" class="btn btn-active btn-width mt-2">Buscar</button>
+                    </div>
+                    <div class="column col-lg-3 col-md-6 col-sm-6">
+                        <button id="btn-restablecer" type="reset" class="btn btn-secondary active btn-width mt-2" 
+                                    ng-click="newSearch()">Restablecer</button>
+                    </div>
+                </div>
+            </form>
+            <div class="mt-3">
+                <a href="archivos/UbicaFolio.pdf" class="btn-link link-color" target="_blank" title="Ubica el folio en tu certificado">Ubica el folio en tu certificado
+                </a>
+            </div>
+        </div>
+
+        <div class="container" id="divResultsWithoutData">
+            <section id="sectionResultWithoutData" style="display:none;">
+                <div data-role="page" >
+                    <div class="top-buffer-submenu">
+                        <p class="titulo_subtexto" title="Información no encontrada">Información no encontrada</p>
+                        <hr class="red">
+                        <section style="margin: 20px;">
+                            <div class="alert alert-danger" >
+                                <p title="La información solicitada no se encuentra en nuestros registros"><b>La información solicitada no se encuentra en nuestros registros.</b></p>
+                                <br>
+                                <p title="Verifica los datos que ingresaste y vuelve a intentarlo.">Verifica los datos que ingresaste y vuelve a intentarlo.</p>
+                                <br>
+                                <button class="btn btn-danger bnt-nvo-intento" type="reset" ng-click="newSearch()" onclick="$('html,body').scrollTop(0);" title="Volver a intentarlo">Volver a intentarlo</button>
+                            </div>
+                        </section>
+                        <div class="col-12">
+                        <div class="alert alert-info">
+                            <p><i class="bi bi-info-circle"></i> <span>Recuerda que los certificados estarán disponibles para su consulta un día después de su emisión.</span></p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+            <section id="sectionErrorWhileConnecting" style="display:none;">
+                <div data-role="page" >
+                    <div class="top-buffer-submenu">
+                        <p class="titulo_subtexto"><span>No es posible mostrar el resultado de la búsqueda</span></p>
+                        <hr class="red">
+                        <section style="margin: 20px;">
+                            <div class="alert alert-danger">
+                                <p><b><span></span>Ocurrió un error mientras se realizaba la consulta</b></p>
+                                <br>
+                                <p><span>Verifica la conexión a internet y vuelve a intentarlo</span></p>
+                                <br>
+                                <button class="btn btn-danger  bnt-nvo-intento" type="reset" ng-click="newSearch()" onclick="$('html,body').scrollTop(0);" title="Volver a intentarlo">Volver a intentarlo</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+       <div class="container" id="divResultsWithData">
+            <section ng-show="datos == null">
+                <div class="row">
+                    <div class="col-12">
+						<br>
+                        <div class="alert alert-info">
+                            <p><i class="bi bi-info-circle"></i> <span>Los certificados estarán disponibles para su consulta un día después de su emisión.</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="sectionResultWithData" style="display:none; margin-top: 5vh ">
+                <div ng-show="datos.tipo !== undefined && datos.tipo == 'TEMP'" >
+                    <div class="mb-5">
+                        <div class="row">
+                            <div class="column col-12">
+                                <hr class="red">
+                                <!--div data-role="page" >
+                                    <p class="titulo_subtexto" style="text-align:center" title="Cargando información, por favor espera un momento..."><i class="fa fa-spin fa-spinner"></i>Cargando información, por favor espera un momento...</p>
+                                    <div class="top-buffer-submenu">
+                                        <section style="margin: 20px;">
+                                            <div class="alert alert-danger">
+                                                <p><b><span></span>La consulta está tardando más de lo esperado</b></p>
+                                                <br>
+                                                <p><span>Intente nuevamente más tarde</span></p>
+                                                <br>
+                                                <button class="btn btn-danger  bnt-nvo-intento" type="reset" ng-click="newSearch()" onclick="$('html,body').scrollTop(0);" title="Volver a intentarlo">Volver a intentarlo</button>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div-->
+                                <div data-role="page">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-6 alert-datos-incial alert alert-danger text-center" id="colEstatus">
+                                        <h5 title="Estatus del documento"><b><!--span ng-bind="lengua.frase936"></span-->Estatus del documento:</b></h5>
+                                        <h5 style="text-transform: capitalize">Folio inválido</h5>
+                                    </div>
+                                    <div class="col-md-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div ng-show="datos.tipo !== undefined && datos.tipo != 'TEMP' && datos.tipo !== 'IEMS'" >
+                    <div class="mb-5">
+                        <div class="row">
+                            <div class="column col-12">
+                                <p class="titulo_subtexto" id="detalle" title="Detalle del documento"><span>Detalle del documento</span></p>
+                                <hr class="red">
+                            </div>
+                        </div>
+                        <div class="row align-items-start" >
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Nombre">Nombre:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3">
+                                <span ng-bind="datos.nombres"></span>&nbsp;<span ng-bind="datos.primerApellido"></span>&nbsp;<span ng-bind="datos.segundoApellido"></span>
+                            </div>
+
+                            <div class="column col-lg-3 col-md-12 mb-3" ng-show="datos.tipoCertificacion !== undefined">
+                                <b><span title="Tipo de estudios">Tipo de estudios:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.tipoCertificacion !== undefined" style="text-transform: uppercase">
+                                <span ng-bind="datos.tipoCertificacion"></span>
+                            </div>
+                            
+                            <!--div class="col-md-3 alert-datos-incial alert alert-success text-center" id="colPromedio"
+                                ng-show="datos.tipoCertificado != null || datos.tipoCertificado !== undefined">
+                                <div ng-show="datos.tipoCertificado !== '6'">
+                                    <h5><b>Promedio:</b></h5>
+                                </div>
+                                <div ng-show="datos.tipoCertificado == '6'">
+                                    <h5><b><span>Resultado obtenido:</span></b></h5>
+                                </div>
+                                <p><span ng-bind="datos.promedio"></span></p>
+                                <div ng-show="datos.promedioTexto != null && datos.promedioTexto != 'NULL'">
+                                    <p><span ng-bind="datos.promedioTexto"></span></p>
+                                </div>
+                            </div-->
+                            
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Tipo de documento">Tipo de documento:</span></b>
+                            </div>
+							<div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.tipoCertificado == 'CERTIFICADO POR ACUERDO 286'">
+                                <span style="text-transform: uppercase">Certificado de estudios por Acuerdo 286 </span>
+                            </div>	
+                            <div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.tipoCertificado !== 'CERTIFICADO POR ACUERDO 286'">
+                                <span ng-bind="datos.tipoCertificado"></span>
+                            </div>
+													
+
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Folio">Folio:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3">
+                                <span ng-bind="datos.folio"></span>
+                            </div>                        
+
+                            <div class="column col-lg-3 col-md-12 mb-3" ng-show="datos.carrera !== undefined">
+                                <b><span title="Carrera">Carrera:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.carrera !== undefined">
+                                <span ng-bind="datos.carrera"></span>
+                            </div>                        
+
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Autoridad emisora">Autoridad emisora:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3">
+                                <span ng-bind="datos.institucion"></span>
+                            </div>                        
+
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Fecha registro SIGED">Fecha de registro en SIGED:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3">
+                                <span ng-bind="datos.fechaCertificado"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <!--div class="col-md-3 alert-datos-incial alert alert-success text-center" id="colPromedio"
+                                ng-show="datos.promedio != null || datos.promedio !== undefined">
+                                <div ng-show="datos.certTipoId !== '6'">
+                                    <h5><b>Promedio:</b></h5>
+                                </div>
+                                <div ng-show="datos.certTipoId == '6'">
+                                    <h5><b><span>Resultado obtenido:</span></b></h5>
+                                </div>
+                                <p><span ng-bind="datos.promedio"></span></p>
+                                <div ng-show="datos.promedioTexto != null && datos.promedioTexto != 'NULL'">
+                                    <p><span ng-bind="datos.promedioTexto"></span></p>
+                                </div>
+                            </div-->
+                            <div class="col-md-3 alert-datos-incial alert alert-success text-center" id="colPromedio"
+                                ng-show="datos.promedio != null || datos.promedio !== undefined">
+                                <div  ng-show="datos.tipoCertificado !== 'CERTIFICADO POR ACUERDO 286'">
+                                    <h5><b>Promedio:</b></h5>
+                                </div>
+                                <div ng-show="datos.tipoCertificado == 'CERTIFICADO POR ACUERDO 286'">
+                                    <h5><b><span>Resultado obtenido:</span></b></h5>
+                                </div>
+                                <p><span ng-bind="datos.promedio"></span></p>
+                                <div ng-show="datos.promedioTexto != null && datos.promedioTexto != 'NULL'">
+                                    <p><span ng-bind="datos.promedioTexto"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3 alert-datos-incial alert alert-info text-center" id="colEstatus">
+                                <h5 title="Estatus del documento"><b><!--span ng-bind="lengua.frase936"></span-->Estatus del documento:</b></h5>
+                                <h5><span ng-bind="datos.estatus" style="text-transform: capitalize"></span></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div ng-show="datos.tipo !== undefined && datos.tipo == 'IEMS'" >
+                        <div class="row">
+                            <div class="column col-12">
+                                <p class="titulo_subtexto" id="detalle" title="Detalle del documento"><span>Detalle del documento</span></p>
+                                <hr class="red">
+                            </div>
+                        </div>
+                        <div class="row align-items-start" >
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Nombre">Nombre:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3">
+                                <span ng-bind="datos.nombres"></span>&nbsp;<span ng-bind="datos.primerApellido"></span>&nbsp;<span ng-bind="datos.segundoApellido"></span>
+                            </div>
+
+                            <div ng-show="datos.certTipoId !== '18'">
+                                <div class="column col-lg-3 col-md-12 mb-3" ng-show="datos.tipoCertificacion !== undefined">
+                                    <b><span title="Tipo de estudios">Tipo de estudios:</span></b>
+                                </div>
+                                <div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.tipoCertificacion !== undefined">
+                                    <span ng-bind="datos.tipoCertificacion"></span>
+                                </div>
+                            </div>
+
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Tipo de documento">Tipo de documento:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.tipoCertificado == 'Terminación'">
+                                <span>Certificado de Terminación de Estudios</span>
+                            </div>   
+                            <div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.tipoCertificado == 'Parcial'">
+                                <span>Certificado Parcial de Estudios</span>
+                            </div>   
+                            <div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.certTipoId == '18'">
+                                <span ng-bind="datos.tipoCertificado"></span>
+                            </div>
+
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Folio">Folio:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3">
+                                <span ng-bind="datos.folio"></span>
+                            </div>                        
+
+                            <div class="column col-lg-3 col-md-12 mb-3" ng-show="datos.carrera !== undefined">
+                                <b><span title="Estudios">Estudios:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.carrera !== undefined">
+                                <span ng-bind="datos.carrera"></span>
+                            </div>                        
+                            
+                            <!--div  ng-show="datos.certTipoId !== '18'">
+                                <div class="column col-lg-3 col-md-12 mb-3">
+                                    <b><span title="Periodo de estudios">Periodo de estudios:</span></b>
+                                </div>
+                                <div class="column col-lg-9 col-md-12 mb-3">
+                                    <span ng-bind="datos.periodoInicio"></span>&nbsp;al&nbsp;<span ng-bind="datos.periodoFin"></span>
+                                </div>  
+                            </div--> 
+                            
+                            <!--    -->
+                            <div ng-show="datos.certTipoId !== '18'" class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Periodo de estudios">Periodo de estudios:</span></b>
+                            </div>
+                            <div ng-show="datos.certTipoId !== '18'" class="column col-lg-9 col-md-12 mb-3">
+                                <span ng-bind="datos.periodoInicio"></span>&nbsp;al&nbsp;<span ng-bind="datos.periodoFin"></span>
+                            </div>  
+                            <!--    -->                       
+
+                            <!--div ng-show="datos.certTipoId !== '18'">
+                                <div class="column col-lg-3 col-md-12 mb-3" ng-show="datos.tipoPerfilLaboral !== undefined || datos.nombrePerfilLaboral !== undefined">
+                                    <b><span title="Formación laboral">Formación laboral:</span></b>
+                                </div>
+                                <div class="column col-lg-9 col-md-12 mb-3" ng-show="datos.tipoPerfilLaboral !== undefined || datos.nombrePerfilLaboral !== undefined">
+                                    <span ng-bind="datos.tipoPerfilLaboral"></span>&nbsp;-&nbsp;<span ng-bind="datos.nombrePerfilLaboral"></span>
+                                </div>  
+                            </div-->
+                            
+                            <div ng-show="datos.certTipoId !== '18'" class="column col-lg-3 col-md-12 mb-3" ng-show="datos.tipoPerfilLaboral !== undefined || datos.nombrePerfilLaboral !== undefined">
+                                <b><span title="Formación laboral">Formación laboral:</span></b>
+                            </div>
+                            <div ng-show="datos.certTipoId !== '18'" class="column col-lg-9 col-md-12 mb-3" ng-show="datos.tipoPerfilLaboral !== undefined || datos.nombrePerfilLaboral !== undefined">
+                                <span ng-bind="datos.tipoPerfilLaboral"></span>&nbsp;-&nbsp;<span ng-bind="datos.nombrePerfilLaboral"></span>
+                            </div>  
+                            
+
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Autoridad emisora">Autoridad emisora:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3">
+                                <span ng-bind="datos.institucion"></span>
+                            </div>                        
+
+                            <div class="column col-lg-3 col-md-12 mb-3">
+                                <b><span title="Fecha registro SIGED">Fecha de registro en SIGED:</span></b>
+                            </div>
+                            <div class="column col-lg-9 col-md-12 mb-3">
+                                <span ng-bind="datos.fechaCertificado"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-3 alert-datos-incial alert alert-success text-center" id="colPromedio"
+                                ng-show="datos.promedio != null || datos.promedio !== undefined">
+                                <div ng-show="datos.certTipoId !== '18'">
+                                    <h5><b><!--span ng-bind="lengua.frase646"></span-->Promedio:</b></h5>
+                                </div>
+                                <div ng-show="datos.certTipoId == '18'">
+                                    <h5><b><span>Resultado obtenido:</span></b></h5>
+                                </div>
+                                <p><span ng-bind="datos.promedio"></span></p>
+                                <div ng-show="datos.promedioTexto != null && datos.promedioTexto != 'NULL'">
+                                    <!--<p style="text-transform: lowercase;"><span ng-bind="datos.promedioTexto"></span></p>-->
+                                    <p><span ng-bind="datos.promedioTexto"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-3 alert-datos-incial alert alert-info text-center" id="colEstatus">
+                                <h5 title="Estatus del documento"><b><!--span ng-bind="lengua.frase936"></span-->Estatus del documento:</b></h5>
+                                <h5><span ng-bind="datos.estatus"></span></h5>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div id="informacion">
+                        <hr class="red">
+                        <div class="alert alert-info alert-info-certificado">
+                        <p><span title="La información de los certificados que se muestran en este portal, son el resultado de la integración de información que envían las autoridades educativas de los estados y la Ciudad de México. -En caso de que la información presentada no coincida con tus resultados obtenidos en el ciclo escolar o no esté disponible, por favor ponte en contacto con la autoridad de tu centro escolar."><b>¡Atención!</b>&nbsp;La información de los certificados que se muestran en este portal, es el resultado de la integración de información que envían las autoridades educativas de los estados y de la Ciudad de México. En caso de que la información presentada no coincida con tu documento o no esté disponible, por favor ponte en contacto con la autoridad de tu centro escolar.</span></p>
+                        <p><span title="La información presentada es de carácter informativa y para verificar la validez del documento impreso. Es una representación de la información contenida en el certificado (documento impreso).">La información presentada es de carácter informativa y para verificación del documento impreso.</span>&nbsp;<span title="El documento oficial es el que se entrega a los padres o tutores de los educandos en sus centros escolares">El documento oficial es el que se entrega a los padres o tutores de los educandos en sus centros escolares.</span></p>
+                        </div>
+                    </div>
+
+                
+            </section>    
+        </div>
+    </main>
+
+
+
+
+    <div class="modal" id="modal-loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p class="titulo_subtexto" style="text-align:center" title="Cargando información, por favor espera un momento..."><i class="fa fa-spin fa-spinner"></i>&nbspCargando información, por favor espera un momento...</p>
+                    <div class="row">
+                        <div class="column col-12 tiempo_fuera" style="display:none;">
+                            <div class="alert alert-warning text-left" role="alert" title="La consulta está tardando más de lo normal">La consulta está tardando más de lo normal</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="column col-12">
+                            <button type="button" class="btn btn-primary tiempo_fuera" data-dismiss="modal" onclick="$('.tiempo_fuera').hide()" title="Terminar la consulta">Terminar la consulta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+    <div class="modal" id="modal-reprocess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p class="titulo_subtexto" style="text-align:center" title="Cargando información, por favor espera un momento..."><i class="fa fa-spin fa-spinner"></i>&nbspCargando información, por favor espera un momento...</p>
+                    <div class="row">
+                        <div class="column col-12 tiempo_fuera" style="display:none;">
+                            <div class="alert alert-warning text-left" role="alert" title="La consulta está tardando más de lo normal">La consulta está tardando más de lo esperado, intente nuevamente más tarde</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="column col-12">
+                            <button type="button" class="btn btn-primary tiempo_fuera" data-dismiss="modal" onclick="$('.tiempo_fuera').hide()" title="Terminar la consulta">Terminar la consulta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+
+    <script src="js/jquery-3.5.1.min.html"></script>
+    <script src="js/angular.html"></script>
+    <script src="js/angular-resource.html"></script>
+
+    <script src="js/uri.html"></script>
+
+    <script src="../../framework-gb.cdn.gob.mx/gm/v3/assets/js/gobmx.js"></script>
+    <script src="../../framework-gb.cdn.gob.mx/gm/accesibilidad/js/gobmx-accesibilidad.min.js"></script>
+
+    <script src="js/documentos.html"></script>
+
+    <script type="text/javascript">
+        $(function(){
+          $("#div-sub-navbar").load("sub-navbar_siged.html");
+        });
+    </script> 
+    
+</body>
+
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/documentos.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jan 2026 15:19:07 GMT -->
+</html>

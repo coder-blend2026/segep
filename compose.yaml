@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      DB_PATH: /var/www/html/certificados/db.sqlite
+    volumes:
+      - ./certificados/db.sqlite:/var/www/html/certificados/db.sqlite
+    restart: unless-stopped

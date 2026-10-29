@@ -4,7 +4,7 @@
  * Ejemplo: php crear_usuario_inicial.php
  * Luego elimina este archivo en producción por seguridad.
  */
-$dbPath = __DIR__ . '/db.sqlite';
+$dbPath = getenv('DB_PATH') ?: __DIR__ . '/db.sqlite';
 $pdo = new PDO('sqlite:' . $dbPath);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

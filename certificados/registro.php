@@ -5,16 +5,8 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-$dbPath = __DIR__ . '/db.sqlite';
-$db = new SQLite3($dbPath);
-$db->exec('CREATE TABLE IF NOT EXISTS certificados (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre TEXT,
-    carrera TEXT,
-    nivel TEXT,
-    folio TEXT UNIQUE,
-    institucion TEXT
-)');
+require_once __DIR__ . '/database.php';
+$db = openCertificatesDatabase();
 
 $msg = '';
 $msgType = 'success';
@@ -29,25 +21,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: registro.php');
         exit;
     } elseif (isset($_POST['save'])) {
-        $nombre = trim((string)$_POST['nombre']);
-        $carrera = trim((string)$_POST['carrera']);
-        $nivel = trim((string)$_POST['nivel']);
-        $folio = trim((string)$_POST['folio']);
-        $institucion = trim((string)$_POST['institucion']);
+        $fields = [
+            'nombres' => trim((string) ($_POST['nombres'] ?? $_POST['nombre'] ?? '')),
+            'primer_apellido' => trim((string) ($_POST['primer_apellido'] ?? '')),
+            'segundo_apellido' => trim((string) ($_POST['segundo_apellido'] ?? '')),
+            'tipo' => trim((string) ($_POST['tipo'] ?? 'GENERAL')),
+            'tipo_certificacion' => trim((string) ($_POST['tipo_certificacion'] ?? $_POST['nivel'] ?? '')),
+            'tipo_certificado' => trim((string) ($_POST['tipo_certificado'] ?? '')),
+            'folio' => trim((string) ($_POST['folio'] ?? '')),
+            'carrera' => trim((string) ($_POST['carrera'] ?? '')),
+            'institucion' => trim((string) ($_POST['institucion'] ?? '')),
+            'fecha_certificado' => trim((string) ($_POST['fecha_certificado'] ?? '')),
+            'promedio' => trim((string) ($_POST['promedio'] ?? '')),
+            'promedio_texto' => trim((string) ($_POST['promedio_texto'] ?? '')),
+            'estatus' => trim((string) ($_POST['estatus'] ?? '')),
+            'cert_tipo_id' => trim((string) ($_POST['cert_tipo_id'] ?? '')),
+            'periodo_inicio' => trim((string) ($_POST['periodo_inicio'] ?? '')),
+            'periodo_fin' => trim((string) ($_POST['periodo_fin'] ?? '')),
+            'tipo_perfil_laboral' => trim((string) ($_POST['tipo_perfil_laboral'] ?? '')),
+            'nombre_perfil_laboral' => trim((string) ($_POST['nombre_perfil_laboral'] ?? '')),
+        ];
+        $fields['nombre'] = trim(implode(' ', array_filter([
+            $fields['nombres'],
+            $fields['primer_apellido'],
+            $fields['segundo_apellido'],
+        ], static fn ($part) => $part !== '')));
+        $fields['nivel'] = $fields['tipo_certificacion'];
         $editId = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 
         if ($editId > 0) {
-            $stmt = $db->prepare('UPDATE certificados SET nombre=:n, carrera=:c, nivel=:l, folio=:f, institucion=:i WHERE id=:id');
+            $assignments = array_map(static fn ($field) => "{$field} = :{$field}", array_keys($fields));
+            $stmt = $db->prepare('UPDATE certificados SET ' . implode(', ', $assignments) . ' WHERE id = :id');
             $stmt->bindValue(':id', $editId, SQLITE3_INTEGER);
         } else {
-            $stmt = $db->prepare('INSERT INTO certificados (nombre, carrera, nivel, folio, institucion) VALUES (:n, :c, :l, :f, :i)');
+            $columns = array_keys($fields);
+            $placeholders = array_map(static fn ($field) => ':' . $field, $columns);
+            $stmt = $db->prepare('INSERT INTO certificados (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')');
         }
-        
-        $stmt->bindValue(':n', $nombre, SQLITE3_TEXT);
-        $stmt->bindValue(':c', $carrera, SQLITE3_TEXT);
-        $stmt->bindValue(':l', $nivel, SQLITE3_TEXT);
-        $stmt->bindValue(':f', $folio, SQLITE3_TEXT);
-        $stmt->bindValue(':i', $institucion, SQLITE3_TEXT);
+
+        foreach ($fields as $field => $value) {
+            $stmt->bindValue(':' . $field, $value, SQLITE3_TEXT);
+        }
         
         if ($stmt->execute()) {
             header('Location: registro.php?ok=1');
@@ -204,29 +218,86 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) { $rows[] = $row; }
                     <?php endif; ?>
                     <input type="hidden" name="save" value="1">
                     
+                    <h6 class="mb-3">Datos del alumno</h6>
                     <div class="row">
-                        <div class="col-md-6">
-                            <label class="auth-label">NOMBRE DEL ALUMNO</label>
-                            <input type="text" name="nombre" class="form-control auth-input" required value="<?= $editRow ? htmlspecialchars($editRow['nombre']) : '' ?>">
+                        <div class="col-md-4">
+                            <label class="auth-label">NOMBRES</label>
+                            <input type="text" name="nombres" class="form-control auth-input" required value="<?= htmlspecialchars($editRow['nombres'] ?? $editRow['nombre'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                         </div>
-                        <div class="col-md-6">
-                            <label class="auth-label">FOLIO ÚNICO</label>
-                            <input type="text" name="folio" class="form-control auth-input" required value="<?= $editRow ? htmlspecialchars($editRow['folio']) : '' ?>">
+                        <div class="col-md-4">
+                            <label class="auth-label">PRIMER APELLIDO</label>
+                            <input type="text" name="primer_apellido" class="form-control auth-input" value="<?= htmlspecialchars($editRow['primer_apellido'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="auth-label">SEGUNDO APELLIDO</label>
+                            <input type="text" name="segundo_apellido" class="form-control auth-input" value="<?= htmlspecialchars($editRow['segundo_apellido'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                         </div>
                     </div>
 
+                    <h6 class="mb-3 mt-2">Datos del certificado</h6>
                     <div class="row">
                         <div class="col-md-4">
-                            <label class="auth-label">CARRERA</label>
-                            <input type="text" name="carrera" class="form-control auth-input" required value="<?= $editRow ? htmlspecialchars($editRow['carrera']) : '' ?>">
+                            <label class="auth-label">FOLIO ÚNICO</label>
+                            <input type="text" name="folio" class="form-control auth-input" required value="<?= htmlspecialchars($editRow['folio'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                         </div>
                         <div class="col-md-4">
-                            <label class="auth-label">NIVEL</label>
-                            <input type="text" name="nivel" class="form-control auth-input" required value="<?= $editRow ? htmlspecialchars($editRow['nivel']) : '' ?>">
+                            <label class="auth-label">TIPO DE REGISTRO</label>
+                            <select name="tipo" class="form-control auth-input">
+                                <option value="GENERAL" <?= ($editRow['tipo'] ?? '') === 'IEMS' ? '' : 'selected' ?>>General</option>
+                                <option value="IEMS" <?= ($editRow['tipo'] ?? '') === 'IEMS' ? 'selected' : '' ?>>IEMS</option>
+                            </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="auth-label">INSTITUCIÓN</label>
-                            <input type="text" name="institucion" class="form-control auth-input" required value="<?= $editRow ? htmlspecialchars($editRow['institucion']) : '' ?>">
+                            <label class="auth-label">TIPO DE DOCUMENTO</label>
+                            <input type="text" name="tipo_certificado" class="form-control auth-input" placeholder="Certificado de estudios" value="<?= htmlspecialchars($editRow['tipo_certificado'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="auth-label">TIPO DE ESTUDIOS / NIVEL</label>
+                            <input type="text" name="tipo_certificacion" class="form-control auth-input" required value="<?= htmlspecialchars($editRow['tipo_certificacion'] ?? $editRow['nivel'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="auth-label">CARRERA / ESTUDIOS</label>
+                            <input type="text" name="carrera" class="form-control auth-input" required value="<?= htmlspecialchars($editRow['carrera'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="auth-label">INSTITUCIÓN EMISORA</label>
+                            <input type="text" name="institucion" class="form-control auth-input" required value="<?= htmlspecialchars($editRow['institucion'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="auth-label">FECHA DE REGISTRO</label>
+                            <input type="date" name="fecha_certificado" class="form-control auth-input" value="<?= htmlspecialchars($editRow['fecha_certificado'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="auth-label">PROMEDIO / RESULTADO</label>
+                            <input type="text" name="promedio" class="form-control auth-input" value="<?= htmlspecialchars($editRow['promedio'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="auth-label">PROMEDIO EN TEXTO</label>
+                            <input type="text" name="promedio_texto" class="form-control auth-input" value="<?= htmlspecialchars($editRow['promedio_texto'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="auth-label">ESTATUS DEL DOCUMENTO</label>
+                            <input type="text" name="estatus" class="form-control auth-input" placeholder="Vigente" value="<?= htmlspecialchars($editRow['estatus'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="auth-label">ID DEL TIPO DE CERTIFICADO</label>
+                            <input type="text" name="cert_tipo_id" class="form-control auth-input" value="<?= htmlspecialchars($editRow['cert_tipo_id'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="auth-label">PERIODO DE INICIO</label>
+                            <input type="text" name="periodo_inicio" class="form-control auth-input" value="<?= htmlspecialchars($editRow['periodo_inicio'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="auth-label">PERIODO DE FIN</label>
+                            <input type="text" name="periodo_fin" class="form-control auth-input" value="<?= htmlspecialchars($editRow['periodo_fin'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="auth-label">TIPO DE PERFIL LABORAL</label>
+                            <input type="text" name="tipo_perfil_laboral" class="form-control auth-input" value="<?= htmlspecialchars($editRow['tipo_perfil_laboral'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="auth-label">NOMBRE DEL PERFIL LABORAL</label>
+                            <input type="text" name="nombre_perfil_laboral" class="form-control auth-input" value="<?= htmlspecialchars($editRow['nombre_perfil_laboral'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                         </div>
                     </div>
                 </div>

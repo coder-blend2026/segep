@@ -51,3 +51,30 @@
 	margin-left:auto; 
 	margin-right:auto;
 }
+
+/* Mantiene el pie al fondo en páginas cortas y después del contenido en páginas largas. */
+body {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 0 !important;
+}
+
+body.search-empty {
+	min-height: calc(100vh + 6rem);
+}
+
+#search {
+	flex: 1 0 auto;
+	min-height: 35vh;
+	padding-bottom: clamp(3rem, 8vh, 6rem);
+}
+
+.main-footer {
+	flex-shrink: 0;
+	position: static !important;
+	clear: both;
+	margin-top: auto !important;
+	margin-bottom: 0 !important;
+	background-color: #611232;
+}

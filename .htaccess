@@ -3,5 +3,10 @@
     SetHandler application/x-httpd-php
 </FilesMatch>
 
+# Mantiene compatible la URL antigua y conserva los parámetros de búsqueda.
+RewriteEngine On
+RewriteRule ^documentos\.html$ documentos.php [END,QSA]
+RewriteRule ^siged\.sep\.gob\.mx/SIGED/documentos\.html$ documentos.php [END,QSA]
+
 # Opcional: Asegurar que index.php sea el archivo por defecto
 DirectoryIndex index.php index.html

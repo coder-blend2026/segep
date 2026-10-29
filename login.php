@@ -5,9 +5,9 @@ if (isset($_SESSION['user'])) {
     exit;
 }
 $error = '';
-$dbPath = __DIR__ . '/certificados/db.sqlite';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $db = new SQLite3($dbPath);
+    require_once __DIR__ . '/certificados/database.php';
+    $db = openCertificatesDatabase();
     $user = trim((string) ($_POST['username'] ?? ''));
     $pass = (string) ($_POST['password'] ?? '');
     $stmt = $db->prepare('SELECT * FROM usuarios WHERE username = :u');

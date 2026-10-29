@@ -1,24 +1,8 @@
 <?php
 // API para registrar y buscar certificados
 session_start();
-$db = new SQLite3('db.sqlite');
-
-// Crear tabla si no existe
-$db->exec('CREATE TABLE IF NOT EXISTS certificados (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre TEXT,
-    carrera TEXT,
-    nivel TEXT,
-    folio TEXT UNIQUE,
-    institucion TEXT
-)');
-
-// Crear tabla de usuarios
-$db->exec('CREATE TABLE IF NOT EXISTS usuarios (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE,
-    password TEXT
-)');
+require_once __DIR__ . '/database.php';
+$db = openCertificatesDatabase();
 
 header('Content-Type: application/json');
 $method = $_SERVER['REQUEST_METHOD'];
@@ -43,12 +27,39 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'registe
         exit;
     }
     $data = json_decode(file_get_contents('php://input'), true);
-    $stmt = $db->prepare('INSERT INTO certificados (nombre, carrera, nivel, folio, institucion) VALUES (:n, :c, :l, :f, :i)');
-    $stmt->bindValue(':n', $data['nombre'], SQLITE3_TEXT);
-    $stmt->bindValue(':c', $data['carrera'], SQLITE3_TEXT);
-    $stmt->bindValue(':l', $data['nivel'], SQLITE3_TEXT);
-    $stmt->bindValue(':f', $data['folio'], SQLITE3_TEXT);
-    $stmt->bindValue(':i', $data['institucion'], SQLITE3_TEXT);
+    $studentName = trim(implode(' ', array_filter([
+        (string) ($data['nombres'] ?? $data['nombre'] ?? ''),
+        (string) ($data['primer_apellido'] ?? ''),
+        (string) ($data['segundo_apellido'] ?? ''),
+    ], static fn ($part) => trim($part) !== '')));
+    $fields = [
+        'nombre' => $studentName,
+        'nombres' => (string) ($data['nombres'] ?? $data['nombre'] ?? ''),
+        'primer_apellido' => (string) ($data['primer_apellido'] ?? ''),
+        'segundo_apellido' => (string) ($data['segundo_apellido'] ?? ''),
+        'tipo' => (string) ($data['tipo'] ?? 'GENERAL'),
+        'tipo_certificacion' => (string) ($data['tipo_certificacion'] ?? $data['nivel'] ?? ''),
+        'tipo_certificado' => (string) ($data['tipo_certificado'] ?? ''),
+        'carrera' => (string) ($data['carrera'] ?? ''),
+        'nivel' => (string) ($data['tipo_certificacion'] ?? $data['nivel'] ?? ''),
+        'folio' => (string) ($data['folio'] ?? ''),
+        'institucion' => (string) ($data['institucion'] ?? ''),
+        'fecha_certificado' => (string) ($data['fecha_certificado'] ?? ''),
+        'promedio' => (string) ($data['promedio'] ?? ''),
+        'promedio_texto' => (string) ($data['promedio_texto'] ?? ''),
+        'estatus' => (string) ($data['estatus'] ?? ''),
+        'cert_tipo_id' => (string) ($data['cert_tipo_id'] ?? ''),
+        'periodo_inicio' => (string) ($data['periodo_inicio'] ?? ''),
+        'periodo_fin' => (string) ($data['periodo_fin'] ?? ''),
+        'tipo_perfil_laboral' => (string) ($data['tipo_perfil_laboral'] ?? ''),
+        'nombre_perfil_laboral' => (string) ($data['nombre_perfil_laboral'] ?? ''),
+    ];
+    $columns = array_keys($fields);
+    $placeholders = array_map(static fn ($column) => ':' . $column, $columns);
+    $stmt = $db->prepare('INSERT INTO certificados (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')');
+    foreach ($fields as $field => $value) {
+        $stmt->bindValue(':' . $field, $value, SQLITE3_TEXT);
+    }
     $ok = $stmt->execute();
     if ($ok) {
         echo json_encode(['success' => true]);
@@ -59,8 +70,8 @@ if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'registe
 }
 
 if ($method === 'GET' && isset($_GET['action']) && $_GET['action'] === 'buscar_folio') {
-    $folio = $_GET['folio'] ?? '';
-    $stmt = $db->prepare('SELECT * FROM certificados WHERE folio = :f');
+    $folio = trim((string) ($_GET['folio'] ?? ''));
+    $stmt = $db->prepare('SELECT * FROM certificados WHERE folio = :f COLLATE NOCASE');
     $stmt->bindValue(':f', $folio, SQLITE3_TEXT);
     $res = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
     if ($res) {

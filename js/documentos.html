@@ -19,6 +19,7 @@ app.controller('documentosController', ['$scope', '$http', '$window', '$rootScop
     function ($scope, $http, $window, $rootScope) {
         $scope.primeraBusqueda = 1;
         $scope.datos = null;
+        $scope.buscando = false;
         $scope.tipo_busqueda = 1;
         
 
@@ -38,30 +39,49 @@ app.controller('documentosController', ['$scope', '$http', '$window', '$rootScop
 
             if($scope.folio != null && $scope.folio.length > 1){
                 folio = $scope.folio.toUpperCase();
-
-                processing();
+                $scope.buscando = true;
+                $scope.datos = null;
                 
                 $http({
                     method: 'GET',
-                    url: global_uri+'/certificado/consultaCertificado/?folios='+folio,
+                    url: 'certificados/api.php?action=buscar_folio&folio='+encodeURIComponent(folio),
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     }
                 }).success(function (data) {
-                    if(data.datos === undefined || data.datos.length== 0){
+                    if(!data.success || !data.data){
                         $scope.datos = 0;
                         $('#sectionResultWithoutData').show();
                         /*$('html, body').animate({scrollTop: 290}, 1000);*/
                         $('html, body').animate({scrollTop: $("#sectionResultWithData").offset().top - 300}, 1000); /*50*/
                         console.log("success-if-scope.datos:"+$scope.datos);
                     }else{
-                        $scope.datos = data.datos[0];
+                        $scope.datos = {
+                            tipo: 'LOCAL',
+                            tipoRegistro: data.data.tipo || 'GENERAL',
+                            nombres: data.data.nombre || [data.data.nombres, data.data.primer_apellido, data.data.segundo_apellido].filter(Boolean).join(' '),
+                            tipoCertificacion: data.data.tipo_certificacion || data.data.nivel,
+                            tipoCertificado: data.data.tipo_certificado,
+                            folio: data.data.folio,
+                            carrera: data.data.carrera,
+                            institucion: data.data.institucion,
+                            fechaCertificado: data.data.fecha_certificado,
+                            promedio: data.data.promedio,
+                            promedioTexto: data.data.promedio_texto,
+                            estatus: data.data.estatus,
+                            certTipoId: data.data.cert_tipo_id,
+                            periodoInicio: data.data.periodo_inicio,
+                            periodoFin: data.data.periodo_fin,
+                            tipoPerfilLaboral: data.data.tipo_perfil_laboral,
+                            nombrePerfilLaboral: data.data.nombre_perfil_laboral
+                        };
                         $('#sectionResultWithData').show();
                         $('html, body').animate({scrollTop: $("#sectionResultWithData").offset().top - 300}, 1000); /*50*/
                         console.log("success-else-scope.datos:"+$scope.datos);
                     }
-                    noprocessing();
+                    $scope.buscando = false;
                 }).error(function (error) {
+                    $scope.buscando = false;
                     $('#sectionErrorWhileConnecting').show();
                     $('html, body').animate({scrollTop: $("#sectionErrorWhileConnecting").offset().top - 300}, 1000); /*50*/
                     $scope.datos = null;
@@ -76,6 +96,7 @@ app.controller('documentosController', ['$scope', '$http', '$window', '$rootScop
 
         $scope.newSearch = function () {
             $scope.datos = null;
+            $scope.buscando = false;
             $('#sectionResultWithData').hide();
             $('#sectionResultWithoutData').hide();
             $('#sectionErrorWhileConnecting').hide();
@@ -86,27 +107,5 @@ app.controller('documentosController', ['$scope', '$http', '$window', '$rootScop
             $scope.folio = null;
         }
 
-        var processing = function () {
-            $("#modal-loading").modal('show');
-            $('.tiempo_fuera').hide();
-            setTimeout(revisaModal, 5000);
-        }
-
-        var noprocessing = function () {
-            $("#modal-loading").modal('hide');
-        }
-        
-        var reprocessing = function () {
-            $("#modal-reprocess").modal('show');
-            $('.tiempo_fuera').hide();
-            setTimeout(revisaModal, 5000);
-        }
-
-        var revisaModal = function () {
-            if($("#modal-loading").is(":visible")){
-                $('.tiempo_fuera').show();
-            }
-        }
- 
     }]
 );

@@ -220,10 +220,11 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) { $rows[] = $row; }
                     
                     <h6 class="mb-3">Datos del alumno</h6>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             <label class="auth-label">NOMBRES</label>
                             <input type="text" name="nombres" class="form-control auth-input" required value="<?= htmlspecialchars($editRow['nombres'] ?? $editRow['nombre'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                         </div>
+		<!--
                         <div class="col-md-4">
                             <label class="auth-label">PRIMER APELLIDO</label>
                             <input type="text" name="primer_apellido" class="form-control auth-input" value="<?= htmlspecialchars($editRow['primer_apellido'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
@@ -232,6 +233,7 @@ while ($row = $res->fetchArray(SQLITE3_ASSOC)) { $rows[] = $row; }
                             <label class="auth-label">SEGUNDO APELLIDO</label>
                             <input type="text" name="segundo_apellido" class="form-control auth-input" value="<?= htmlspecialchars($editRow['segundo_apellido'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                         </div>
+		--!>
                     </div>
 
                     <h6 class="mb-3 mt-2">Datos del certificado</h6>
